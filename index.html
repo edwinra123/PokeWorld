@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokéDex - Discover the World of Pokémon</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="pokeball-icon">
+                    <div class="pokeball-top"></div>
+                    <div class="pokeball-middle"></div>
+                    <div class="pokeball-bottom"></div>
+                </div>
+                <h1>PokéDex</h1>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-list"></i>
+                <span>PokeLista</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-star"></i>
+                <span>Favoritos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-shapes"></i>
+                <span>Tipos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bolt"></i>
+                <span>Habilidades</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-crown"></i>
+                <span>Legendarios</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-section">
+            <h3 class="section-title">Generaciones</h3>
+            <a href="#" class="section-link">Generacion I</a>
+            <a href="#" class="section-link">Generacion II</a>
+            <a href="#" class="section-link">Generacion III</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="section-title">Nuevo Pokémon</h3>
+            <a href="#" class="section-link">Paldea Region</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h3 class="section-title">Populares</h3>
+            <a href="#" class="section-link">Trending Now</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search Pokémon by name or number..." class="search-input">
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="icon-btn">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="user-avatar">
+                    <span>JM</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Banner -->
+        <section class="hero-banner">
+            <div class="hero-content">
+                <h2 class="hero-title">Descubre el mundo<br>Pokémon</h2>
+                <p class="hero-description">
+                    Explore mas de 1000+ Pokémones con estadísticas detalladas, habilidades, y evoluciones.
+                </p>
+                <button class="hero-btn">Explora Ahora!</button>
+            </div>
+            <div class="hero-pikachu">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pikachu">
+            </div>
+        </section>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-number">1,025</p>
+                    <p class="stat-label">Pokémones</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                    <i class="fas fa-shapes"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-number">18</p>
+                    <p class="stat-label">Tipos</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #a855f7, #9333ea);">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-number">9</p>
+                    <p class="stat-label">Generaciones</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f97316, #ea580c);">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-number">59</p>
+                    <p class="stat-label">Habilidades</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Type Filters -->
+        <section class="types-section">
+            <div class="section-header">
+                <h3 class="section-title-main">Pokémon Tipos</h3>
+                <a href="#" class="view-all">View All +</a>
+            </div>
+            <div class="types-filter">
+                <button class="type-btn fire">
+                    <i class="fas fa-fire"></i>
+                    <span>Fire</span>
+                </button>
+                <button class="type-btn water">
+                    <i class="fas fa-tint"></i>
+                    <span>Water</span>
+                </button>
+                <button class="type-btn grass">
+                    <i class="fas fa-leaf"></i>
+                    <span>Grass</span>
+                </button>
+                <button class="type-btn electric">
+                    <i class="fas fa-bolt"></i>
+                    <span>Electric</span>
+                </button>
+                <button class="type-btn psychic">
+                    <i class="fas fa-brain"></i>
+                    <span>Psychic</span>
+                </button>
+                <button class="type-btn flying">
+                    <i class="fas fa-feather"></i>
+                    <span>Flying</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="pokemon-section">
+            <div class="section-header">
+                <h3 class="section-title-main">Featured Pokémon</h3>
+                <div class="region-filters">
+                    <button class="region-btn active">All</button>
+                    <button class="region-btn">Kanto</button>
+                    <button class="region-btn">Johto</button>
+                    <button class="region-btn">Hoenn</button>
+                </div>
+            </div>
+            <div class="container_cards"></div>
+            <div class="pagination-container">
+                <button class="pagination-btn" onclick="prev()">
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </button>
+                <div class="numbers"></div>
+                <button class="pagination-btn" onclick="next()">
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <div id="panel_pokemon" class="panel-pokemon"></div>
+        <footer class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <div class="pokeball-icon small">
+                            <div class="pokeball-top"></div>
+                            <div class="pokeball-middle"></div>
+                            <div class="pokeball-bottom"></div>
+                        </div>
+                        <h3>PokéDex</h3>
+                    </div>
+                    <p class="footer-text">Guía completa del mundo de Pokémon con estadísticas e información detalladas.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Pokédex</a></li>
+                        <li><a href="#">Tipos</a></li>
+                        <li><a href="#">Regiones</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Recursos</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Comunidad</a></li>
+                        <li><a href="#">Soporte</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Sigueme!</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Mobile -->
+    <div id="overlayPokemon" class="overlay-pokemon">
+        <div class="modal-pokemon">
+            <button id="cerrarModal" class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="detallePokemon"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
