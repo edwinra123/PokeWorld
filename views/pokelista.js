@@ -5,6 +5,9 @@ const perPage = 20;
 export function renderPokeLista() {
     const main = document.getElementById("main-content");
     main.innerHTML = `
+        <div class ="div-search">
+        g
+        </div>
         <section class="pokemon-list-section">
             <h2>Todos los Pokémon</h2>
             <div class="container_cards"></div>
