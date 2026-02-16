@@ -69,14 +69,26 @@ export function renderAjustes() {
             </div>
         </div>
     `;
+    initDarkModeToggle();
+}
+
+function initDarkModeToggle() {
     const toggle = document.getElementById("darkToggle");
 
+    if (!toggle) return;
+
     if (localStorage.getItem("darkMode") === "true") {
-        document.body.classList.add("dark");
         toggle.checked = true;
+        document.body.classList.add("dark");
     }
+
     toggle.addEventListener("change", () => {
-        document.body.classList.toggle("dark");
-        localStorage.setItem("darkMode", toggle.checked);
+        if (toggle.checked) {
+            document.body.classList.add("dark");
+            localStorage.setItem("darkMode", "true");
+        } else {
+            document.body.classList.remove("dark");
+            localStorage.setItem("darkMode", "false");
+        }
     });
 }

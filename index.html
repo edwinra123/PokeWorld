@@ -13,6 +13,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
+<script>
+    (function() {
+        if (localStorage.getItem("darkMode") === "true") {
+            document.documentElement.classList.add("dark");
+            document.body.classList.add("dark");
+        }
+    })();
+</script>
 
 <body data-route="home">
     <aside class="sidebar">

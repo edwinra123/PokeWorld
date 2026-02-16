@@ -12,6 +12,15 @@ const routes = {
     ajustes: renderAjustes,
 };
 
+// ⭐ NUEVA FUNCIÓN: Aplica dark mode
+function applyDarkMode() {
+    if (localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark");
+    } else {
+        document.body.classList.remove("dark");
+    }
+}
+
 export function initRouter() {
     const navItems = document.querySelectorAll(".nav-item");
 
@@ -27,10 +36,15 @@ export function initRouter() {
             const mainContent = document.getElementById("main-content");
             mainContent.classList.remove("pagina-banner");
 
-            if (routes[route]) routes[route]();
+            if (routes[route]) {
+                routes[route]();
+
+                applyDarkMode();
+            }
         });
     });
 
+    applyDarkMode();
     routes.home();
 }
 

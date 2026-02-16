@@ -36,8 +36,10 @@ export function renderFavoritos() {
                           stroke="#ccc" 
                           stroke-width="2"/>
                 </svg>
+                <div class="text_state">
                 <h2>No tienes favoritos aún</h2>
                 <p>Explora la Pokédex y agrega tus Pokémon favoritos</p>
+                </div>
             </div>
         </div>
     `;
