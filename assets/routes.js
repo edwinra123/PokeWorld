@@ -1,10 +1,12 @@
 import { renderHome } from "../views/home.js";
 import { renderPokeLista } from "../views/pokelista.js";
+import { renderFavoritos } from "../views/favoritos.js"; // ⬅️ IMPORTAR
 
 const routes = {
     home: renderHome,
     pokelista: renderPokeLista,
-    // favoritos, tipos, habilidades, legendarios
+    favoritos: renderFavoritos,
+
 };
 
 export function initRouter() {
@@ -22,7 +24,7 @@ export function initRouter() {
         });
     });
 
-    // Render home por defecto
+
     routes.home();
 }
 

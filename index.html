@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PokéDex - Discover the World of Pokémon</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="pokelista.css">
+    <link rel="stylesheet" href="favoritos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
+
 <body data-route="home">
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -35,36 +38,16 @@
                 <i class="fas fa-star"></i>
                 <span>Favoritos</span>
             </a>
-            <a href="#" class="nav-item" data-route="tipos">
-                <i class="fas fa-shapes"></i>
-                <span>Tipos</span>
-            </a>
-            <a href="#" class="nav-item" data-route="habilidades">
-                <i class="fas fa-bolt"></i>
-                <span>Habilidades</span>
-            </a>
+
             <a href="#" class="nav-item" data-route="legendarios">
                 <i class="fas fa-crown"></i>
                 <span>Legendarios</span>
             </a>
+            <a href="#" class="nav-item" data-route="ajustes">
+                <i class="fa-solid fa-gear"></i>
+                <span>Ajustes</span>
+            </a>
         </nav>
-
-        <div class="sidebar-section">
-            <h3 class="section-title">Generaciones</h3>
-            <a href="#" class="section-link">Generacion I</a>
-            <a href="#" class="section-link">Generacion II</a>
-            <a href="#" class="section-link">Generacion III</a>
-        </div>
-
-        <div class="sidebar-section">
-            <h3 class="section-title">Nuevo Pokémon</h3>
-            <a href="#" class="section-link">Paldea Region</a>
-        </div>
-
-        <div class="sidebar-section">
-            <h3 class="section-title">Populares</h3>
-            <a href="#" class="section-link">Trending Now</a>
-        </div>
     </aside>
 
     <main class="main-content" id="main-content">
@@ -79,7 +62,8 @@
             <div id="detallePokemon"></div>
         </div>
     </div>
-    
+    <script src="assets/assets.js"></script>
     <script type="module" src="assets/routes.js"></script>
 </body>
+
 </html>

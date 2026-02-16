@@ -1,0 +1,365 @@
+.favorites-page {
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+.favorites-header {}
+
+.favorites-header h1 {
+    font-size: 26px;
+    color: #333;
+    margin: 0;
+}
+
+.favorites-header h3 {
+    font-size: 16px;
+    font-weight: 100;
+    color: #94a3b8;
+}
+
+.banner_vz {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    display: flex;
+}
+
+.cap_pk {
+    width: 320px;
+    height: 8.9rem;
+    padding: 1.5rem;
+    overflow: hidden;
+    display: block;
+    justify-content: space-between;
+    border-radius: 25px;
+    border: 0.1px solid #e5e7eb;
+    background-color: white;
+}
+
+.favorites-count {
+    margin-bottom: 0.5rem;
+}
+
+.header_top_favorites {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    color: #1e293b;
+}
+
+.cap_pk h2 {
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin-bottom: 0.8rem;
+}
+
+.tl_pk {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.pk_bottom {
+    background: #f3e8ff;
+    color: #a855f7;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 8px;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    width: 160px;
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.favorite-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.favorite-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Botón de eliminar */
+
+.remove-favorite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+    background: #ff4757;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.remove-favorite svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+.remove-favorite:hover {
+    background: #ff3838;
+    transform: rotate(90deg);
+}
+
+
+/* Imagen del Pokémon */
+
+.favorite-card-image {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.favorite-card-image img {
+    width: 80%;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.favorite-card:hover .favorite-card-image img {
+    transform: scale(1.05);
+}
+
+
+/* Info del Pokémon */
+
+.favorite-card-info {
+    text-align: center;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.favorite-card-info h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+    text-transform: capitalize;
+    font-weight: 700;
+}
+
+.pokemon-number {
+    color: #999;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+
+/* Tipos del Pokémon */
+
+.favorite-card-types {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+/* Botón ver detalles */
+
+.view-details-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-details-btn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.view-details-btn:active {
+    transform: translateY(0);
+}
+
+
+/* ============================================
+   EMPTY STATE (Sin favoritos)
+   ============================================ */
+
+.empty-state {
+    max-width: 500px;
+    margin: 5rem auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.empty-state svg {
+    opacity: 0.3;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.2;
+    }
+}
+
+.empty-state h2 {
+    font-size: 2rem;
+    color: #666;
+    margin: 0;
+    font-weight: 700;
+}
+
+.empty-state p {
+    color: #999;
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+
+
+/* Animación de salida al eliminar */
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+
+/* Animación de entrada */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.favorite-card {
+    animation: fadeIn 0.4s ease;
+}
+
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .favorites-page {
+        padding: 1rem;
+    }
+    .favorites-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.25rem 1.5rem;
+    }
+    .favorites-header h1 {
+        font-size: 1.5rem;
+    }
+    .favorites-count {
+        padding: 0.6rem 1.25rem;
+    }
+    .favorites-count span {
+        font-size: 1.25rem;
+    }
+    .favorites-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+    .favorite-card {
+        padding: 1rem;
+    }
+    .favorite-card-image {
+        height: 150px;
+    }
+    .favorite-card-info h3 {
+        font-size: 1.25rem;
+    }
+    .empty-state {
+        margin: 3rem auto;
+        padding: 1rem;
+    }
+    .empty-state svg {
+        width: 80px;
+        height: 80px;
+    }
+    .empty-state h2 {
+        font-size: 1.5rem;
+    }
+    .empty-state p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .favorites-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.75rem;
+    }
+    .favorite-card-image {
+        height: 120px;
+    }
+}
