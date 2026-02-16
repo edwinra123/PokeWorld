@@ -23,10 +23,13 @@ export function initRouter() {
             link.classList.add("active");
 
             const route = link.dataset.route;
+
+            const mainContent = document.getElementById("main-content");
+            mainContent.classList.remove("pagina-banner");
+
             if (routes[route]) routes[route]();
         });
     });
-
 
     routes.home();
 }
