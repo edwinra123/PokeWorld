@@ -1,12 +1,15 @@
 import { renderHome } from "../views/home.js";
 import { renderPokeLista } from "../views/pokelista.js";
-import { renderFavoritos } from "../views/favoritos.js"; // ⬅️ IMPORTAR
+import { renderFavoritos } from "../views/favoritos.js";
+import { renderLegendarios } from "../views/legendarios.js";
+import { renderAjustes } from "../views/ajustes.js";
 
 const routes = {
     home: renderHome,
     pokelista: renderPokeLista,
     favoritos: renderFavoritos,
-
+    legendarios: renderLegendarios,
+    ajustes: renderAjustes,
 };
 
 export function initRouter() {

@@ -83,9 +83,6 @@ function createFavoriteCard(poke) {
 
     card.innerHTML = `
         <button class="remove-favorite" data-pokemon-id="${poke.id}" title="Quitar de favoritos">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </svg>
         </button>
         
         <div class="favorite-card-image">
@@ -93,8 +90,8 @@ function createFavoriteCard(poke) {
         </div>
         
         <div class="favorite-card-info">
-            <h3>${capitalize(poke.name)}</h3>
             <span class="pokemon-number">#${String(poke.id).padStart(3,'0')}</span>
+            <h3>${capitalize(poke.name)}</h3>
         </div>
         
         <div class="favorite-card-types">
@@ -105,19 +102,25 @@ function createFavoriteCard(poke) {
             `).join('')}
         </div>
         
-        <button class="view-details-btn">
-            Ver Detalles
-        </button>
+        <div class="favorite-card-stats">
+            <div class="stat-item">
+                <span>⚡</span>
+                <span>CP <span class="stat-value">${poke.base_experience || '???'}</span></span>
+            </div>
+            <div class="stat-item">
+                <span>⚖️</span>
+                <span><span class="stat-value">${(poke.weight / 10).toFixed(1)}</span> kg</span>
+            </div>
+        </div>
     `;
-    
-    const viewBtn = card.querySelector('.view-details-btn');
-    viewBtn.addEventListener('click', () => showPokemonDetails(poke));
     
     const removeBtn = card.querySelector('.remove-favorite');
     removeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         removeFavorite(poke.id, card);
     });
+    
+    card.addEventListener('click', () => showPokemonDetails(poke));
     
     return card;
 }

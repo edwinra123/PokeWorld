@@ -90,221 +90,258 @@
     color: #666;
 }
 
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .favorite-card {
-    background: white;
+    background: #f8f9fa;
     border-radius: 20px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    padding: 24px 20px 20px 20px;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
 }
 
 .favorite-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
-
-
-/* Botón de eliminar */
 
 .remove-favorite {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 35px;
-    height: 35px;
-    background: #ff4757;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    background: white;
     border: none;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
     z-index: 10;
-}
-
-.remove-favorite svg {
-    width: 20px;
-    height: 20px;
-    fill: white;
+    padding: 0;
 }
 
 .remove-favorite:hover {
-    background: #ff3838;
-    transform: rotate(90deg);
+    transform: scale(1.1);
 }
 
+.remove-favorite svg {
+    display: none;
+}
 
-/* Imagen del Pokémon */
+.remove-favorite::before {
+    content: '❤';
+    font-size: 18px;
+    color: #ff6b6b;
+}
 
 .favorite-card-image {
-    width: 100%;
-    height: 200px;
+    background: white;
+    border-radius: 16px;
+    padding: 30px 20px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f8f9fa;
-    border-radius: 15px;
-    margin-bottom: 1rem;
+    min-height: 180px;
 }
 
 .favorite-card-image img {
-    width: 80%;
+    width: 100%;
+    max-width: 140px;
     height: auto;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-    transition: transform 0.3s ease;
 }
-
-.favorite-card:hover .favorite-card-image img {
-    transform: scale(1.05);
-}
-
-
-/* Info del Pokémon */
 
 .favorite-card-info {
-    text-align: center;
-    margin-bottom: 1rem;
-    width: 100%;
-}
-
-.favorite-card-info h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0 0 0.5rem 0;
-    text-transform: capitalize;
-    font-weight: 700;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
 }
 
 .pokemon-number {
-    color: #999;
-    font-weight: 600;
-    font-size: 0.95rem;
+    color: #b0b0b0;
+    font-size: 12px;
+    font-weight: 700;
+    order: -1;
 }
 
-
-/* Tipos del Pokémon */
+.favorite-card-info h3 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #ff6b6b;
+    margin: 0;
+    flex: 1;
+}
 
 .favorite-card-types {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
+.type-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
 
-/* Botón ver detalles */
+.type-fuego,
+.type-fire {
+    background: #ff6b6b;
+    color: white;
+}
+
+.type-volador,
+.type-flying {
+    background: #74b9ff;
+    color: white;
+}
+
+.type-agua,
+.type-water {
+    background: #0984e3;
+    color: white;
+}
+
+.type-planta,
+.type-grass {
+    background: #00b894;
+    color: white;
+}
+
+.type-electrico,
+.type-electric {
+    background: #fdcb6e;
+    color: #2d3436;
+}
+
+.type-psiquico,
+.type-psychic {
+    background: #e84393;
+    color: white;
+}
+
+.type-normal {
+    background: #b2bec3;
+    color: white;
+}
+
+.type-lucha,
+.type-fighting {
+    background: #d63031;
+    color: white;
+}
+
+.type-veneno,
+.type-poison {
+    background: #a29bfe;
+    color: white;
+}
+
+.type-tierra,
+.type-ground {
+    background: #d4a574;
+    color: white;
+}
+
+.type-roca,
+.type-rock {
+    background: #8b7355;
+    color: white;
+}
+
+.type-bicho,
+.type-bug {
+    background: #a8e061;
+    color: white;
+}
+
+.type-fantasma,
+.type-ghost {
+    background: #6c5ce7;
+    color: white;
+}
+
+.type-acero,
+.type-steel {
+    background: #636e72;
+    color: white;
+}
+
+.type-dragon {
+    background: #764ba2;
+    color: white;
+}
+
+.type-siniestro,
+.type-dark {
+    background: #2d3436;
+    color: white;
+}
+
+.type-hada,
+.type-fairy {
+    background: #fd79a8;
+    color: white;
+}
+
+.type-hielo,
+.type-ice {
+    background: #81ecec;
+    color: #2d3436;
+}
+
+.favorite-card-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #636e72;
+}
+
+.stat-item svg,
+.stat-item::before {
+    font-size: 14px;
+}
+
+.stat-value {
+    font-weight: 700;
+    color: #2d3436;
+}
 
 .view-details-btn {
-    width: 100%;
-    padding: 0.75rem;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    display: none;
 }
 
-.view-details-btn:hover {
-    background: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-}
-
-.view-details-btn:active {
-    transform: translateY(0);
-}
-
-
-/* ============================================
-   EMPTY STATE (Sin favoritos)
-   ============================================ */
-
-.empty-state {
-    max-width: 500px;
-    margin: 5rem auto;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 2rem;
-}
-
-.empty-state svg {
-    opacity: 0.3;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%,
-    100% {
-        opacity: 0.3;
-    }
-    50% {
-        opacity: 0.2;
+@media (max-width: 768px) {
+    .favorites-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
     }
 }
-
-.empty-state h2 {
-    font-size: 2rem;
-    color: #666;
-    margin: 0;
-    font-weight: 700;
-}
-
-.empty-state p {
-    color: #999;
-    font-size: 1.1rem;
-    margin: 0;
-    line-height: 1.5;
-}
-
-
-/* ============================================
-   ANIMACIONES
-   ============================================ */
-
-
-/* Animación de salida al eliminar */
-
-@keyframes fadeOut {
-    to {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-}
-
-
-/* Animación de entrada */
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.favorite-card {
-    animation: fadeIn 0.4s ease;
-}
-
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
 
 @media (max-width: 768px) {
     .favorites-page {

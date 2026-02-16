@@ -10,6 +10,10 @@
     left: 280px;
 }
 
+.header-spacer {
+    height: calc(1.5rem + 1.5rem + 20px);
+}
+
 .item_flex {
     display: flex;
 }
