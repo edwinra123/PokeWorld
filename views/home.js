@@ -1,107 +1,85 @@
 const POKE_URL = "https://pokeapi.co/api/v2/pokemon?limit=20";
 
+const stackPokemons = [
+    { id: 143, name: "Snorlax",    color: "#6B8CFF", tipo: "Normal"        },
+    { id: 130, name: "Gyarados",   color: "#4FC3F7", tipo: "Water · Flying"},
+    { id: 1,   name: "Bulbasaur",  color: "#66BB6A", tipo: "Grass · Poison"},
+    { id: 9,   name: "Blastoise",  color: "#42A5F5", tipo: "Water"         },
+    { id: 6,   name: "Charizard",  color: "#FF6B35", tipo: "Fire · Flying" },
+];
+function getSprite(id) {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+}
+
 export async function renderHome() {
     const main = document.getElementById("main-content");
     main.innerHTML = `
-        <section class="hero-banner">
-            <div class="hero-content">
-                <h2 class="hero-title">Descubre el mundo<br>Pokémon</h2>
-                <p class="hero-description">
-                    Explore mas de 1000+ Pokémones con estadísticas detalladas, habilidades, y evoluciones.
-                </p>
-                <button class="hero-btn">Explora Ahora!</button>
+    <div class="home_section">
+        <div class="banner_principal_home">
+            <div class="banner_left_h">
+                <span class="sasw">Pokédex · 1,025 Pokémon</span>
+                <h1>Descubre el mundo <span class="text_banner-home">Pokémon</span></h1>
+                <p>Explora más de 1,000 Pokémon con estadísticas detalladas, 
+                cadenas de evolución, habilidades y mucho más.</p>
             </div>
-            <div class="hero-pikachu">
-                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pikachu">
-            </div>
-        </section>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                    <i class="fas fa-database"></i>
-                </div>
-                <div class="stat-info">
-                    <p class="stat-number">1,025</p>
-                    <p class="stat-label">Pokémones</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
-                    <i class="fas fa-shapes"></i>
-                </div>
-                <div class="stat-info">
-                    <p class="stat-number">18</p>
-                    <p class="stat-label">Tipos</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: linear-gradient(135deg, #a855f7, #9333ea);">
-                    <i class="fas fa-layer-group"></i>
-                </div>
-                <div class="stat-info">
-                    <p class="stat-number">9</p>
-                    <p class="stat-label">Generaciones</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: linear-gradient(135deg, #f97316, #ea580c);">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <div class="stat-info">
-                    <p class="stat-number">59</p>
-                    <p class="stat-label">Habilidades</p>
+            <div class="banner_right_h">
+                <div class="pokemon-stack">
+                    ${stackPokemons.map((p, i) => `
+                        <div class="poke-card card-${i}" style="background: ${p.color}">
+                            <img 
+                                src="${getSprite(p.id)}" 
+                                alt="${p.name}"
+                                class="poke-card-img"
+                            />
+                            <div class="poke-card-info">
+                                <span class="poke-card-name">${p.name}</span>
+                                <span class="poke-card-tipo">${p.tipo}</span>
+                            </div>
+                        </div>
+                    `).join("")}
                 </div>
             </div>
         </div>
 
-        <section class="types-section">
-            <div class="section-header">
-                <h3 class="section-title-main">Pokémon Tipos</h3>
+        <div class="banner_grid">
+            <div class="card_grid">
+                <div class="left_card">
+                    <img class="img_card" src="//icons.veryicon.com/png/o/miscellaneous/broken-linear-icon/pokemon-1.png">
+                </div>
+                <div class="right_card">
+                    <h1 class="number_grid">18</h1>
+                    <h2>Tipos</h2>
+                </div>
             </div>
-        </section>
-
-        <section class="pokemon-section">
-            <div class="section-header">
-                <h3 class="section-title-main">Featured Pokémon</h3>
+            <div class="card_grid">
+                <div class="left_card">
+                    <img class="img_card" src="//icons.veryicon.com/png/o/miscellaneous/broken-linear-icon/pokemon-1.png">
+                </div>
+                <div class="right_card">
+                    <h1 class="number_grid">9</h1>
+                    <h2>Generaciones</h2>
+                </div>
             </div>
-            <div class="container_cards"></div>
-        </section>
+            <div class="card_grid">
+                <div class="left_card">
+                    <img class="img_card" src="//icons.veryicon.com/png/o/miscellaneous/broken-linear-icon/pokemon-1.png">
+                </div>
+                <div class="right_card">
+                    <h1 class="number_grid">48</h1>
+                    <h2>Legendarios</h2>
+                </div>
+            </div>
+            <div class="card_grid">
+                <div class="left_card">
+                    <img class="img_card" src="//icons.veryicon.com/png/o/miscellaneous/broken-linear-icon/pokemon-1.png">
+                </div>
+                <div class="right_card">
+                    <h1 class="number_grid">59</h1>
+                    <h2>Habilidades</h2>
+                </div>
+            </div>
+        </div>
+    </div>
     `;
-
-    const container = main.querySelector(".container_cards");
-    container.innerHTML = "<p>Cargando Pokémon...</p>";
-
-    try {
-        const res = await fetch(POKE_URL);
-        const data = await res.json();
-
-        container.innerHTML = "";
-        for (const p of data.results) {
-            const pokeData = await fetch(p.url).then(r => r.json());
-            container.appendChild(createCard(pokeData));
-        }
-    } catch (err) {
-        container.innerHTML = "<p>Error al cargar Pokémon</p>";
-        console.error(err);
-    }
-}
-
-function createCard(poke) {
-    const card = document.createElement("div");
-    card.className = "card_pokemons";
-    card.innerHTML = `
-        <div class="img_card_pokemon">
-            <img src="${poke.sprites.other['official-artwork'].front_default}" alt="${poke.name}">
-        </div>
-        <div class="info_poke">
-            <div class="title_pokemon"><h2>${capitalize(poke.name)}</h2></div>
-            <div class="id_pk"><h6>#${String(poke.id).padStart(3,'0')}</h6></div>
-        </div>
-    `;
-    return card;
-}
-
-function capitalize(text) {
-    return text.charAt(0).toUpperCase() + text.slice(1);
 }

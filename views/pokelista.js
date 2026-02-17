@@ -15,7 +15,9 @@ export function renderPokeLista() {
             </div>
         </div>
         <section class="pokemon-list-section">
-            <div class="container_cards"></div>
+            <div class="container_cards">
+            
+            </div>
             <div class="pagination-container">
                 <button class="pagination-btn prev"><i class="fa-solid fa-angle-left"></i></button>
                 <div class="numbers"></div>
@@ -49,6 +51,9 @@ export function renderPokeLista() {
                 const pokeData = await res.json();
                 container.innerHTML = "";
                 container.appendChild(createCard(pokeData));
+                if (localStorage.getItem("compactMode") === "true") {
+                    container.classList.add("compacto");
+                }
             } catch (err) {
                 container.innerHTML = `<p style="color:red;">${err.message}</p>`;
                 console.error(err);
@@ -70,9 +75,7 @@ export function renderPokeLista() {
             try {
                 const res = await fetch(`${POKE_URL}?limit=1000`);
                 const data = await res.json();
-                const results = data.results.filter(p =>
-                    p.name.startsWith(query)
-                );
+                const results = data.results.filter(p => p.name.startsWith(query));
 
                 container.innerHTML = "";
 
@@ -84,6 +87,11 @@ export function renderPokeLista() {
                 for (let i = 0; i < Math.min(10, results.length); i++) {
                     const pokeData = await fetch(results[i].url).then(r => r.json());
                     container.appendChild(createCard(pokeData));
+                }
+
+                // Aplicar compacto si está guardado
+                if (localStorage.getItem("compactMode") === "true") {
+                    container.classList.add("compacto");
                 }
             } catch (err) {
                 container.innerHTML = `<p style='color:red;'>Error al buscar</p>`;
@@ -109,6 +117,15 @@ async function loadPage(page) {
         }
 
         setupPagination(data.count);
+
+        // ✅ Aplicar modo compacto si estaba guardado
+        const savedCompact = localStorage.getItem("compactMode") === "true";
+        console.log("📦 compactMode al cargar página:", savedCompact);
+        if (savedCompact) {
+            container.classList.add("compacto");
+            console.log("✅ Clase compacto aplicada al container");
+        }
+
     } catch (err) {
         container.innerHTML = "<p>Error al cargar Pokémon</p>";
         console.error(err);
@@ -126,7 +143,7 @@ function createCard(poke) {
         </div>
         <div class="info_poke">
             <div class="title_pokemon"><h2>${capitalize(poke.name)}</h2></div>
-            <div class="id_pk"><h6>#${String(poke.id).padStart(3,'0')}</h6></div>
+            <div class="id_pk"><h6>#${String(poke.id).padStart(3, '0')}</h6></div>
         </div>
     `;
 
@@ -150,7 +167,7 @@ async function showPokemonDetails(poke) {
         
         <div class="modal-header">
             <div class="header-title">
-                <h1>${capitalize(poke.name)} <span class="pokemon-id">#${String(poke.id).padStart(3,'0')}</span></h1>
+                <h1>${capitalize(poke.name)} <span class="pokemon-id">#${String(poke.id).padStart(3, '0')}</span></h1>
             </div>
             
             <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-pokemon-id="${poke.id}">
@@ -195,7 +212,6 @@ async function showPokemonDetails(poke) {
                             const statName = translateStat(s.stat.name);
                             const statValue = s.base_stat;
                             const percentage = (statValue / 255) * 100;
-                            
                             return `
                                 <div class="stat-row">
                                     <span class="stat-name">${statName}</span>
@@ -227,22 +243,22 @@ async function showPokemonDetails(poke) {
             </div>
         </div>
     `;
-    
+
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
-    
+
     setTimeout(() => overlay.classList.add('active'), 10);
-    
+
     const closeBtn = modal.querySelector('.close-btn');
     closeBtn.addEventListener('click', () => closeModal(overlay));
-    
+
     const favoriteBtn = modal.querySelector('.favorite-btn');
     favoriteBtn.addEventListener('click', () => toggleFavorite(poke, favoriteBtn));
-    
+
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) closeModal(overlay);
     });
-    
+
     document.addEventListener('keydown', function escHandler(e) {
         if (e.key === 'Escape') {
             closeModal(overlay);
@@ -250,9 +266,10 @@ async function showPokemonDetails(poke) {
         }
     });
 }
+
 function toggleFavorite(poke, button) {
     const index = favorites.findIndex(fav => fav.id === poke.id);
-    
+
     if (index !== -1) {
         favorites.splice(index, 1);
         button.classList.remove('active');
@@ -268,7 +285,7 @@ function toggleFavorite(poke, button) {
         button.querySelector('span').textContent = 'Quitar de Favoritos';
         showNotification('⭐ Agregado a favoritos');
     }
-    
+
     localStorage.setItem('pokemonFavorites', JSON.stringify(favorites));
 }
 
@@ -277,14 +294,15 @@ function showNotification(message) {
     notification.className = 'notification';
     notification.textContent = message;
     document.body.appendChild(notification);
-    
+
     setTimeout(() => notification.classList.add('show'), 10);
-    
+
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
     }, 2000);
 }
+
 function translateType(type) {
     const types = {
         'normal': 'Normal',
@@ -329,6 +347,7 @@ function closeModal(overlay) {
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
 function setupPagination(total) {
     const numbers = document.querySelector(".numbers");
     numbers.innerHTML = `Page ${currentPage} / ${Math.ceil(total / perPage)}`;

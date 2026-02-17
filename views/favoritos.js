@@ -1,3 +1,5 @@
+import { navigateTo } from '../assets/routes.js';
+
 const POKE_URL = "https://pokeapi.co/api/v2/pokemon";
 let favorites = JSON.parse(localStorage.getItem('pokemonFavorites')) || [];
 
@@ -25,22 +27,21 @@ export function renderFavoritos() {
             <h2>Pokemones favoritos</h2>
             </div>
             <div id="favorites-container" class="favorites-grid">
-              
-
-
             </div>
             
-            <div id="empty-state" class="empty-state" style="display: none;">
-                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" 
-                          stroke="#ccc" 
-                          stroke-width="2"/>
-                </svg>
-                <div class="text_state">
-                <h2>No tienes favoritos aún</h2>
-                <p>Explora la Pokédex y agrega tus Pokémon favoritos</p>
-                </div>
-            </div>
+           <div id="empty-state" class="empty-state" style="display: none;">
+    <svg class="logo_empty" width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              stroke="#ccc"
+              stroke-width="1.5"
+              fill="none"/>
+    </svg>
+    <div class="text_state">
+        <h2>No tienes favoritos aún</h2>
+        <p>Explora la Pokédex y agrega tus Pokémon favoritos para verlos aquí</p>
+    </div>
+    <button class="btn-explore">Explorar Pokédex</button>
+</div>
         </div>
     `;
 
@@ -55,6 +56,12 @@ async function loadFavoritesContent() {
     if (favorites.length === 0) {
         container.style.display = 'none';
         emptyState.style.display = 'flex';
+
+        // 👇 Evento del botón "Explorar Pokédex"
+        document.querySelector('.btn-explore').addEventListener('click', () => {
+            navigateTo('pokelista');
+        });
+
         return;
     }
 
