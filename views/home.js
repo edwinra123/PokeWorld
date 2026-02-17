@@ -8,7 +8,6 @@ const stackPokemons = [
     { id: 6,   name: "Charizard",  color: "#FF6B35", tipo: "Fire · Flying" },
 ];
 
-// ── Pokémon a mostrar ─────────────────────────────────────────────────────────
 const MAIN_POKE  = { id: 6, badge: "REY DEL FUEGO", apodo: "Omega", meta: "Gen 1 · Región Kanto" };
 const SIDE_POKES = [
     { id: 384, apodo: "Sky",   desc: "Guardián de los cielos y pacificador de los titanes...", stats: ["attack", "defense"] },
@@ -40,7 +39,6 @@ function getSprite(id) {
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function getAccent(types) { return TYPE_COLORS[types?.[0]?.type?.name] || "#A78BFA"; }
 
-// ── Helpers HTML ──────────────────────────────────────────────────────────────
 function typeTagsHTML(types) {
     return types.map(t => {
         const c     = TYPE_COLORS[t.type.name] || "#888";
@@ -77,7 +75,6 @@ function sideStatBoxesHTML(stats, keys, accent) {
     }).join("");
 }
 
-// ── Render sección destacados ─────────────────────────────────────────────────
 async function renderDestacados(container) {
     container.innerHTML = `<p style="color:#6B7280;font-family:sans-serif;padding:40px;text-align:center;letter-spacing:2px">Cargando...</p>`;
 
@@ -178,6 +175,12 @@ async function renderDestacados(container) {
 export async function renderHome() {
     const main = document.getElementById("main-content");
     main.innerHTML = `
+    <header class="header_banner" >
+    <div class="header_input">
+    <i class="fa-brands fa-sistrix"></i>
+    <input type="text" placeholder="Buscar Pokémon, movimientos, objetos..."></input>
+    </div>
+    </header>
     <div class="home_section">
         <div class="banner_principal_home">
             <div class="banner_left_h">
@@ -222,6 +225,6 @@ export async function renderHome() {
 
         <div class="banner_two" id="dest2-container"></div>
     </div>`;
-
+                        if (window.FontAwesome) FontAwesome.dom.i2svg();
     await renderDestacados(document.getElementById("dest2-container"));
 }
