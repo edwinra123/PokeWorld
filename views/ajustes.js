@@ -91,4 +91,5 @@ function initDarkModeToggle() {
             localStorage.setItem("darkMode", "false");
         }
     });
+
 }

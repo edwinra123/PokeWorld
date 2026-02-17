@@ -462,9 +462,6 @@
     letter-spacing: 0.5px;
 }
 
-
-/* Scrollbar personalizada */
-
 .pokemon-modal::-webkit-scrollbar {
     width: 8px;
 }
@@ -480,29 +477,4 @@
 
 .pokemon-modal::-webkit-scrollbar-thumb:hover {
     background: #adb5bd;
-}
-
-
-/* Responsive */
-
-@media (max-width: 600px) {
-    .modal-header {
-        padding: 30px 20px 20px 20px;
-    }
-    .header-title h1 {
-        font-size: 28px;
-    }
-    .pokemon-id {
-        font-size: 20px;
-    }
-    .modal-body {
-        padding: 30px 20px;
-    }
-    .stat-row {
-        grid-template-columns: 100px 40px 1fr;
-        gap: 12px;
-    }
-    .stat-name {
-        font-size: 13px;
-    }
 }
