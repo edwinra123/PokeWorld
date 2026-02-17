@@ -269,23 +269,25 @@ body.dark .sidebar {
     border-right-width: 1px;
 }
 
-body.dark .hero-banner {
-    background-color: #0f0f13 !important;
+body.dark .banner_principal_home {
+    background-color: #1a1a20b3  ;
     background-image: none !important;
     border: 1px solid #ffffff1a;
 }
 
-body.dark .hero-banner .hero-title {
+body.dark .banner_principal_home h1 {
     color: var(--primary-color-dark);
 }
 
-body.dark .hero-banner .hero-description {
+body.dark .banner_principal_home p {
     color: var(--primary-color-text-dark);
 }
 
-body.dark .hero-banner .hero-btn {
-    background-color: var(--primary-color-background-dark);
+body.dark .banner_grid .card_grid{
+    background-color:#1a1a20b3 ;
     color: white;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     font-weight: 500;
 }
 

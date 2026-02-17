@@ -117,8 +117,6 @@ async function loadPage(page) {
         }
 
         setupPagination(data.count);
-
-        // ✅ Aplicar modo compacto si estaba guardado
         const savedCompact = localStorage.getItem("compactMode") === "true";
         console.log("📦 compactMode al cargar página:", savedCompact);
         if (savedCompact) {
