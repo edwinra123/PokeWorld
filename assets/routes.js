@@ -20,7 +20,6 @@ function applyDarkMode() {
     }
 }
 
-// 👇 Función nueva exportada
 export function navigateTo(route) {
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(l => l.classList.remove('active'));
