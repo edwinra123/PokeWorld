@@ -55,7 +55,7 @@ export function renderPokeLista() {
                     container.classList.add("compacto");
                 }
             } catch (err) {
-                container.innerHTML = `<p style="color:red;">${err.message}</p>`;
+                container.innerHTML = `<p style="">${err.message}</p>`;
                 console.error(err);
             }
         }
@@ -88,8 +88,6 @@ export function renderPokeLista() {
                     const pokeData = await fetch(results[i].url).then(r => r.json());
                     container.appendChild(createCard(pokeData));
                 }
-
-                // Aplicar compacto si está guardado
                 if (localStorage.getItem("compactMode") === "true") {
                     container.classList.add("compacto");
                 }

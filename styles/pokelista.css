@@ -3,8 +3,6 @@
     width: 100%;
     border-bottom: 1px solid #e2e8f0;
     padding: 1.5rem;
-    z-index: 1000;
-    position: fixed;
     box-sizing: border-box;
     top: 0;
     left: 280px;
@@ -49,7 +47,9 @@
 }
 
 .pokemon-list-section {
-    margin-top: 6rem;
+    margin-top: 2rem;
+    height: 100%;
+    background:none;
 }
 
 .pokemon-overlay {
@@ -640,7 +640,7 @@
     justify-content: center;
     gap: 1rem;
     margin-top: 3rem;
-    margin-bottom: 3rem;
+    padding-bottom: 3rem;
 }
 
 .pagination-btn {

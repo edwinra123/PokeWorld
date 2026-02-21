@@ -71,7 +71,6 @@ const coloresClaro = {
     'normal': '#f5f5f5'
 };
 
-// Cache para almacenar los pokémon ya obtenidos
 let pokemonCache = {};
 
 function obtenerLegendariosAleatorios(cantidad = 3) {
@@ -82,7 +81,6 @@ function obtenerLegendariosAleatorios(cantidad = 3) {
 }
 
 async function obtenerPokemon(nombreOId) {
-    // Verificar si ya está en cache
     if (pokemonCache[nombreOId]) {
         return pokemonCache[nombreOId];
     }
@@ -91,7 +89,6 @@ async function obtenerPokemon(nombreOId) {
         const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${nombreOId}`);
         const data = await response.json();
 
-        // Obtener stats
         const stats = {};
         data.stats.forEach(stat => {
             if (stat.stat.name === 'attack') stats.ataque = stat.base_stat;
@@ -213,25 +210,21 @@ async function cargarListaLegendarios() {
 
         if (pokemon) {
             htmlRows += `
-                <tr style="border-bottom: 1px solid #e5e7eb; transition: background 0.2s;" 
-                    onmouseover="this.style.background='#f9fafb'" 
-                    onmouseout="this.style.background='white'">
-                    <td style="padding: 1rem; color: #6b7280; font-weight: 500;">${String(i + 1).padStart(2, '0')}.</td>
-                    <td style="padding: 1rem;">
-                        <div style="display: flex; align-items: center; gap: 0.75rem;">
-                            <img src="${pokemon.imagenPequeña}" alt="${pokemon.nombre}" style="width: 40px; height: 40px;">
-                            <span style="font-weight: 600; color: #1f2937; text-transform: capitalize;">${pokemon.nombre}</span>
-                        </div>
+                <tr class="tr_table" style="" 
+                    >
+                  <td class="tr1">${String(i + 1).padStart(2, '0')}.</td>
+                    <td>
+                    <div class="pokemon-info">
+                        <img src="${pokemon.imagenPequeña}" alt="${pokemon.nombre}">
+                        <span>${pokemon.nombre}</span>
+                    </div>
                     </td>
-                    <td style="padding: 1rem; color: #6b7280; text-transform: capitalize;">${pokemon.tipos.join('/')}</td>
-                    <td style="padding: 1rem; color: #1f2937; font-weight: 500;">${legendarioInfo.region}</td>
-                    <td style="padding: 1rem;">
-                        <button onclick="verDetalles('${pokemon.nombre}')" 
-                                style="padding: 0.5rem 1.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; background: white; color: #374151; font-weight: 500; cursor: pointer; transition: all 0.2s;"
-                                onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#9ca3af'"
-                                onmouseout="this.style.background='white'; this.style.borderColor='#d1d5db'">
-                            Ver Detalles
-                        </button>
+                    <td class="tr2">${pokemon.tipos.join('/')}</td>
+                    <td class="tr3">${legendarioInfo.region}</td>
+                    <td class="td-btn">
+                    <button class="btn-detalles" onclick="verDetalles('${pokemon.nombre}')">
+                        Ver Detalles
+                    </button>
                     </td>
                 </tr>
             `;
@@ -258,26 +251,25 @@ export function renderLegendarios() {
                 </div>
             </div>
         </div>
-        <div class="header-spacer"></div>
 
-        <h3 style="margin: 1.5rem 0 1rem 1.5rem; font-size: 1.25rem; font-weight: 600;">Destacados Legendarios</h3>
+        <h3 class="title_dark_lg" style="margin: 1.5rem 0 1rem 1.5rem; font-size: 1.25rem; font-weight: 600;">Destacados Legendarios</h3>
         <div class="banner_top_lg">
             <div class="lg_destacados"></div>
             <div class="lg_destacados"></div>
             <div class="lg_destacados"></div>
         </div>
 
-        <h3 style="margin: 3rem 0 1rem 1.5rem; font-size: 1.25rem; font-weight: 600;">Lista de Legendarios</h3>
+        <h3 class="title_dark_lg" style="margin: 3rem 0 1rem 1.5rem; font-size: 1.25rem; font-weight: 600;">Lista de Legendarios</h3>
         <div style="padding: 0 1.5rem 2rem 1.5rem;">
-            <div style="background: white; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead style="background: #f9fafb; border-bottom: 2px solid #e5e7eb; border-radius:1.5rem;">
+            <div class="table_div"style="">
+                <table class="table" style="">
+                    <thead class="darkthead">
                         <tr>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">No.</th>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">Pokémon</th>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">Tipo</th>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">Región</th>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">Acción</th>
+                            <th class="dark_th" style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">No.</th>
+                            <th class="dark_th"style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">Pokémon</th>
+                            <th class="dark_th"style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">Tipo</th>
+                            <th class="dark_th"style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">Región</th>
+                            <th class="dark_th"style="padding: 1rem; text-align: left; font-weight: 600; color: #6b7280; font-size: 0.875rem; text-transform: uppercase;">Acción</th>
                         </tr>
                     </thead>
                     <tbody id="lista-legendarios-tbody">
