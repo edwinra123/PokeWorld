@@ -56,8 +56,6 @@ async function loadFavoritesContent() {
     if (favorites.length === 0) {
         container.style.display = 'none';
         emptyState.style.display = 'flex';
-
-        // 👇 Evento del botón "Explorar Pokédex"
         document.querySelector('.btn-explore').addEventListener('click', () => {
             navigateTo('pokelista');
         });
@@ -89,15 +87,15 @@ async function loadFavoritesContent() {
 function createFavoriteCard(poke) {
     const card = document.createElement("div");
     card.className = "favorite-card";
+        const isDark = localStorage.getItem("darkMode") === "true";
 
     card.innerHTML = `
         <button class="remove-favorite" data-pokemon-id="${poke.id}" title="Quitar de favoritos">
         </button>
         
-        <div class="favorite-card-image">
+        <div class="favorite-card-image" style="background: ${isDark ? '#1a1a20' : 'white'};">  <!-- 👈 agrega el style -->
             <img src="${poke.sprites.other['official-artwork'].front_default}" alt="${poke.name}">
         </div>
-        
         <div class="favorite-card-info">
             <span class="pokemon-number">#${String(poke.id).padStart(3,'0')}</span>
             <h3>${capitalize(poke.name)}</h3>

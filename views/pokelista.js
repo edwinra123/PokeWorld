@@ -1,3 +1,5 @@
+import { appState } from "../assets/state.js";
+
 const POKE_URL = "https://pokeapi.co/api/v2/pokemon";
 let currentPage = 1;
 const perPage = 20;
@@ -29,7 +31,14 @@ export function renderPokeLista() {
     const searchInput = document.getElementById("searchInput");
     const container = document.querySelector(".container_cards");
 
-    loadPage(currentPage);
+    // ✅ Si venimos del home con una búsqueda pendiente
+    if (appState.searchQuery) {
+        searchInput.value = appState.searchQuery;
+        appState.searchQuery = "";
+        searchInput.dispatchEvent(new Event("input"));
+    } else {
+        loadPage(currentPage);
+    }
 
     document.querySelector(".prev").addEventListener("click", () => {
         if (currentPage > 1) loadPage(--currentPage);
@@ -116,10 +125,8 @@ async function loadPage(page) {
 
         setupPagination(data.count);
         const savedCompact = localStorage.getItem("compactMode") === "true";
-        console.log("📦 compactMode al cargar página:", savedCompact);
         if (savedCompact) {
             container.classList.add("compacto");
-            console.log("✅ Clase compacto aplicada al container");
         }
 
     } catch (err) {
@@ -301,36 +308,19 @@ function showNotification(message) {
 
 function translateType(type) {
     const types = {
-        'normal': 'Normal',
-        'fire': 'Fuego',
-        'water': 'Agua',
-        'grass': 'Planta',
-        'electric': 'Eléctrico',
-        'ice': 'Hielo',
-        'fighting': 'Lucha',
-        'poison': 'Veneno',
-        'ground': 'Tierra',
-        'flying': 'Volador',
-        'psychic': 'Psíquico',
-        'bug': 'Bicho',
-        'rock': 'Roca',
-        'ghost': 'Fantasma',
-        'dragon': 'Dragón',
-        'dark': 'Siniestro',
-        'steel': 'Acero',
-        'fairy': 'Hada'
+        'normal': 'Normal', 'fire': 'Fuego', 'water': 'Agua', 'grass': 'Planta',
+        'electric': 'Eléctrico', 'ice': 'Hielo', 'fighting': 'Lucha', 'poison': 'Veneno',
+        'ground': 'Tierra', 'flying': 'Volador', 'psychic': 'Psíquico', 'bug': 'Bicho',
+        'rock': 'Roca', 'ghost': 'Fantasma', 'dragon': 'Dragón', 'dark': 'Siniestro',
+        'steel': 'Acero', 'fairy': 'Hada'
     };
     return types[type] || type.toUpperCase();
 }
 
 function translateStat(stat) {
     const stats = {
-        'hp': 'PS',
-        'attack': 'Ataque',
-        'defense': 'Defensa',
-        'special-attack': 'At. Especial',
-        'special-defense': 'Def. Especial',
-        'speed': 'Velocidad'
+        'hp': 'PS', 'attack': 'Ataque', 'defense': 'Defensa',
+        'special-attack': 'At. Especial', 'special-defense': 'Def. Especial', 'speed': 'Velocidad'
     };
     return stats[stat] || stat;
 }

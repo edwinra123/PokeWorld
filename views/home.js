@@ -1,11 +1,12 @@
-const POKE_URL = "https://pokeapi.co/api/v2/pokemon?limit=20";
+import { appState } from "../assets/state.js";
+import { navigateTo } from "../assets/routes.js";
 
 const stackPokemons = [
-    { id: 143, name: "Snorlax",    color: "#6B8CFF", tipo: "Normal"        },
-    { id: 130, name: "Gyarados",   color: "#4FC3F7", tipo: "Water · Flying"},
-    { id: 1,   name: "Bulbasaur",  color: "#66BB6A", tipo: "Grass · Poison"},
-    { id: 9,   name: "Blastoise",  color: "#42A5F5", tipo: "Water"         },
-    { id: 6,   name: "Charizard",  color: "#FF6B35", tipo: "Fire · Flying" },
+    { id: 143, name: "Snorlax",    color: "#6B8CFF", tipo: "Normal"         },
+    { id: 130, name: "Gyarados",   color: "#4FC3F7", tipo: "Water · Flying" },
+    { id: 1,   name: "Bulbasaur",  color: "#66BB6A", tipo: "Grass · Poison" },
+    { id: 9,   name: "Blastoise",  color: "#42A5F5", tipo: "Water"          },
+    { id: 6,   name: "Charizard",  color: "#FF6B35", tipo: "Fire · Flying"  },
 ];
 
 const MAIN_POKE  = { id: 6, badge: "REY DEL FUEGO", apodo: "Omega", meta: "Gen 1 · Región Kanto" };
@@ -98,17 +99,14 @@ async function renderDestacados(container) {
 
     container.innerHTML = `
     <div class="dest2-section">
-
         <div class="dest2-header">
             <div>
                 <h2 class="dest2-title">Pokémon Destacados</h2>
                 <p class="dest2-subtitle">Los más poderosos de la Pokédex</p>
             </div>
-            
         </div>
 
         <div class="dest2-grid">
-
             <div class="dest2-card dest2-main">
                 <div class="dest2-main-img-wrap">
                     <img class="dest2-main-img" src="${getSprite(main.id)}" alt="${capitalize(main.name)}">
@@ -161,10 +159,9 @@ async function renderDestacados(container) {
                     ${sideStatBoxesHTML(side2.stats, SIDE_POKES[1].stats, s2Accent)}
                 </div>
             </div>
-
         </div>
     </div>`;
-+
+
     container.querySelectorAll(".dest2-filter-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             container.querySelectorAll(".dest2-filter-btn").forEach(b => b.classList.remove("active"));
@@ -172,14 +169,15 @@ async function renderDestacados(container) {
         });
     });
 }
+
 export async function renderHome() {
     const main = document.getElementById("main-content");
     main.innerHTML = `
-    <header class="header_banner" >
-    <div class="header_input">
-    <i class="fa-brands fa-sistrix"></i>
-    <input type="text" placeholder="Buscar Pokémon, movimientos, objetos..."></input>
-    </div>
+    <header class="header_banner">
+        <div class="header_input">
+            <i class="fa-brands fa-sistrix"></i>
+            <input type="text" id="homeSearchInput" placeholder="Buscar Pokémon, movimientos, objetos...">
+        </div>
     </header>
     <div class="home_section">
         <div class="banner_principal_home">
@@ -225,6 +223,17 @@ export async function renderHome() {
 
         <div class="banner_two" id="dest2-container"></div>
     </div>`;
-                        if (window.FontAwesome) FontAwesome.dom.i2svg();
+
+    const searchInput = document.getElementById("homeSearchInput");
+    searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            const query = searchInput.value.toLowerCase().trim();
+            if (!query) return;
+            appState.searchQuery = query;
+            navigateTo("pokelista");
+        }
+    });
+
+    if (window.FontAwesome) FontAwesome.dom.i2svg();
     await renderDestacados(document.getElementById("dest2-container"));
 }

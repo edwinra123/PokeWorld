@@ -529,6 +529,7 @@ body.dark .input_search_aj{
 body.dark .banner_bottom_padding h1{
     color: #7c3aed;
 }
+
 body.dark .banner-config-top{
     background-color: #1a1a20;
     border-bottom: 1px solid rgb(255 255 255 / 0.05);
@@ -542,9 +543,89 @@ body.dark .banner-config-visual{
 body.dark .banner-config-top h2{
     color: white;
 }
-body.dark
-body.dark
-body.dark
+body.dark .remove-favorite{
+    background-color: #0f0f13;
+    
+}
+body.dark .favorite-card-info h3{
+    color: #7c3aed;
+}
+body.dark .favorite-btn{
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+}
+body.dark .pokemon-image-container{
+    background: #0f0f13;
+    border: none;
+}
+body.dark .stats-section, .abilities-section{
+    background: none;
+    border: none;
+}
+body.dark .stats-section h3, .abilities-section h3{
+    color: #7c3aed;
+}
+body.dark .stat-name {
+    color: white;
+}
+body.dark .stat-value{
+    color: #868e96;
+}
+body.dark .stat-bar{
+    background-color: #6b7280;
+}
+body.dark .stat-total{
+    border-top:2px solid rgb(255 255 255 / 0.05) ;
+}
+body.dark .physical-item{
+    color: white;
+    border: 1px  solid rgb(255 255 255 / 0.05);
+    background-color: #1a1a20;
+}
+body.dark .physical-item .label{
+    color: #7c3aed;
+}
+body.dark .physical-item .value{
+    color: white;
+}
+body.dark .pokemon-modal{
+    background-color: #0f0f13;
+    border:1px solid rgb(255 255 255 / 0.05);
+}
+body.dark .modal-header{
+    border-bottom: 1px solid rgb(255 255 255 / 0.05);
+}
+body.dark .header-title h1{
+    color: #7c3aed;
+}
+body.dark .favorite-card{
+    background-color: #1a1a20;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+body.dark .ability-item{
+    background-color: #1a1a20;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 1rem;
+}
+body.dark .ability-name{
+    color: white;
+}
+body.dark .modal-header h1{
+    color: #7c3aed;
+}
+body.dark .dest2-title{
+    color: #7c3aed;
+}
+body.dark .dest2-subtitle{
+    color: white;
+}
+body.dark .text_banner_cs p{
+    color: #9810FA;
+}
+body.dark .favorite-card-image {
+    background: #1a1a20;
+}
 body.dark .banner_left_bottom{
     color: white;
 }
