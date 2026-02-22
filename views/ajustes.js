@@ -1,5 +1,4 @@
 export function renderAjustes() {
-    console.log("renderizando ajustes");
     const app = document.getElementById("main-content");
     app.classList.add("pagina-banner");
 
@@ -26,13 +25,9 @@ export function renderAjustes() {
                                 <h2>Visualización</h2>
                                 <p>Personaliza cómo ves la Pokédex</p>
                             </div>
-
-
                             <div class="banner-config-bottom">
                                 <div class="left-config">
-                                    <div class="icon-left">
-                                        <i class="fa-solid fa-moon"></i>
-                                    </div>
+                                    <div class="icon-left"><i class="fa-solid fa-moon"></i></div>
                                     <div class="config-text">
                                         <h1>Modo Oscuro</h1>
                                         <p>Cambia la interfaz a colores oscuros para reducir la fatiga visual.</p>
@@ -47,9 +42,7 @@ export function renderAjustes() {
                             </div>
                             <div class="banner-config-bottom">
                                 <div class="left-config">
-                                    <div class="icon2">
-                                        <i class="fa-solid fa-border-all"></i>
-                                    </div>
+                                    <div class="icon2"><i class="fa-solid fa-border-all"></i></div>
                                     <div class="config-text">
                                         <h1>Vista de Cuadrícula Compacta</h1>
                                         <p>Muestra más Pokémon por fila reduciendo el tamaño de las tarjetas.</p>
@@ -62,21 +55,18 @@ export function renderAjustes() {
                                     </label>
                                 </div>
                             </div>
-                            </div>
-                            <div class="banner_consejo">
-                                <div class="banner_lg_cs">
-                                <i class="fa-solid fa-lightbulb"></i>
-                                </div>
-                                <div class="text_banner_cs">
+                        </div>
+                        <div class="banner_consejo">
+                            <div class="banner_lg_cs"><i class="fa-solid fa-lightbulb"></i></div>
+                            <div class="text_banner_cs">
                                 <h1>Consejo</h1>
                                 <p>Tus preferencias se guardan automáticamente y se aplicarán en todas las páginas de la Pokédex. Puedes cambiarlas en cualquier momento.</p>
-                                </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="banner_right_js">
-            </div>
+            <div class="banner_right_js"></div>
         </div>
     `;
 
@@ -84,48 +74,30 @@ export function renderAjustes() {
     initCompactToggle();
 }
 
-function initCompactToggle() {
-    const toggle = document.getElementById("toggle-compact");
-    if (!toggle) return;
-    const savedCompact = localStorage.getItem("compactMode") === "true";
-    console.log(" compactMode guardado:", savedCompact);
-    toggle.checked = savedCompact;
-
-    toggle.addEventListener("change", () => {
-        if (toggle.checked) {
-            localStorage.setItem("compactMode", "true");
-            console.log(" Guardado: compactMode = true");
-        } else {
-            localStorage.setItem("compactMode", "false");
-            console.log("Guardado: compactMode = false");
-        }
-
-        const cards = document.querySelector(".container_cards");
-        if (cards) {
-            cards.classList.toggle("compacto", toggle.checked);
-            console.log("Clase compacto aplicada:", toggle.checked);
-        } else {
-            console.log(" .container_cards no está en esta página, se aplicará al navegar");
-        }
-    });
-}
-
 function initDarkModeToggle() {
     const toggle = document.getElementById("darkToggle");
     if (!toggle) return;
 
-    if (localStorage.getItem("darkMode") === "true") {
-        toggle.checked = true;
-        document.body.classList.add("dark");
-    }
+    toggle.checked = localStorage.getItem("darkMode") === "true";
 
     toggle.addEventListener("change", () => {
-        if (toggle.checked) {
-            document.body.classList.add("dark");
-            localStorage.setItem("darkMode", "true");
-        } else {
-            document.body.classList.remove("dark");
-            localStorage.setItem("darkMode", "false");
-        }
+        const isDark = toggle.checked;
+        document.documentElement.classList.toggle("dark", isDark);
+        document.body.classList.toggle("dark", isDark);
+        localStorage.setItem("darkMode", isDark ? "true" : "false");
+    });
+}
+
+function initCompactToggle() {
+    const toggle = document.getElementById("toggle-compact");
+    if (!toggle) return;
+
+    toggle.checked = localStorage.getItem("compactMode") === "true";
+
+    toggle.addEventListener("change", () => {
+        localStorage.setItem("compactMode", toggle.checked ? "true" : "false");
+
+        const cards = document.querySelector(".container_cards");
+        if (cards) cards.classList.toggle("compacto", toggle.checked);
     });
 }

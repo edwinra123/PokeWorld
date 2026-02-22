@@ -14,23 +14,23 @@
     <link rel="stylesheet" href="styles/movil.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            if (localStorage.getItem("darkMode") === "true") {
+                document.documentElement.classList.add("dark");
+            }
+        })();
+    </script>
 </head>
-<script>
-    (function() {
-        if (localStorage.getItem("darkMode") === "true") {
-            document.documentElement.classList.add("dark");
-            document.body.classList.add("dark");
-        }
-    })();
-</script>
 
 <body data-route="home">
+    <button class="hamburger" id="hamburger">
+    <i class="fas fa-bars"></i>
+    </button>
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="logo">
-                <div class="pokeball-icon">
-                   
-                </div>
+                <div class="pokeball-icon"></div>
                 <h1>PokéDex</h1>
             </div>
         </div>
@@ -48,7 +48,6 @@
                 <i class="fas fa-star"></i>
                 <span>Favoritos</span>
             </a>
-
             <a href="#" class="nav-item" data-route="legendarios">
                 <i class="fas fa-crown"></i>
                 <span>Legendarios</span>
@@ -60,9 +59,7 @@
         </nav>
     </aside>
 
-    <main class="main-content" id="main-content">
-
-    </main>
+    <main class="main-content" id="main-content"></main>
 
     <div id="overlayPokemon" class="overlay-pokemon">
         <div class="modal-pokemon">
@@ -72,6 +69,7 @@
             <div id="detallePokemon"></div>
         </div>
     </div>
+
     <script type="module" src="assets/routes.js"></script>
 </body>
 

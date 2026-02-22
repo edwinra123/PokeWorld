@@ -13,22 +13,18 @@ const routes = {
 };
 
 function applyDarkMode() {
-    if (localStorage.getItem("darkMode") === "true") {
-        document.body.classList.add("dark");
-    } else {
-        document.body.classList.remove("dark");
-    }
+    const isDark = localStorage.getItem("darkMode") === "true";
+    document.documentElement.classList.toggle("dark", isDark);
+    document.body.classList.toggle("dark", isDark);
 }
 
 export function navigateTo(route) {
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(l => l.classList.remove('active'));
+    document.querySelectorAll(".nav-item").forEach((l) => l.classList.remove("active"));
 
     const targetNav = document.querySelector(`[data-route="${route}"]`);
-    if (targetNav) targetNav.classList.add('active');
+    if (targetNav) targetNav.classList.add("active");
 
-    const mainContent = document.getElementById('main-content');
-    mainContent.classList.remove('pagina-banner');
+    document.getElementById("main-content").classList.remove("pagina-banner");
 
     if (routes[route]) {
         routes[route]();
@@ -37,31 +33,36 @@ export function navigateTo(route) {
 }
 
 export function initRouter() {
-    const navItems = document.querySelectorAll(".nav-item");
-
-    navItems.forEach(link => {
+    document.querySelectorAll(".nav-item").forEach((link) => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
-
-            navItems.forEach(l => l.classList.remove("active"));
-            link.classList.add("active");
-
-            const route = link.dataset.route;
-
-            const mainContent = document.getElementById("main-content");
-            mainContent.classList.remove("pagina-banner");
-
-            if (routes[route]) {
-                routes[route]();
-                applyDarkMode();
-            }
+            navigateTo(link.dataset.route);
         });
     });
 
-    applyDarkMode();
-    routes.home();
+    navigateTo("home");
 }
+const hamburger = document.getElementById("hamburger");
+const sidebar = document.querySelector(".sidebar");
 
-document.addEventListener("DOMContentLoaded", () => {
-    initRouter();
+const overlay = document.createElement("div");
+overlay.className = "sidebar-overlay";
+document.body.appendChild(overlay);
+
+hamburger.addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("active");
 });
+
+overlay.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("active");
+});
+
+document.querySelectorAll(".nav-item").forEach(link => {
+    link.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("active");
+    });
+});
+initRouter();
