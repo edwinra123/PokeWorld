@@ -1,7 +1,6 @@
 import { appState } from "../assets/state.js";
 import { navigateTo } from "../assets/routes.js";
 
-// ─── Caché de stats del Home ──────────────────────────────────────────────────
 let homeStatsCache = null;
 
 async function fetchHomeStats() {
@@ -14,18 +13,10 @@ async function fetchHomeStats() {
         fetch("https://pokeapi.co/api/v2/ability?limit=1000").then(r => r.json()),
     ]);
 
-    // Tipos: excluimos "unknown" y "shadow" que no son tipos de combate reales
     const tiposReales = tipos.results.filter(t => t.name !== "unknown" && t.name !== "shadow");
 
-    // Legendarios + míticos: contamos del listado de especies
-    // (solo count, sin descargar cada especie)
-    // Usamos el endpoint de pokemon-species con is_legendary/is_mythical
-    // Como no podemos filtrar en la URL, usamos una aproximación eficiente:
-    // consultamos la generación para obtener el count total de Pokémon
-    const totalPokemon = especies.count;
 
-    // Para legendarios usamos los endpoints de grupo de egg "undiscovered" como proxy
-    // Mejor: hacemos solo las peticiones de species con un límite razonable en lotes
+    const totalPokemon = especies.count;
     const speciesData = await Promise.all(
         especies.results.map(s => fetch(s.url).then(r => r.json()).catch(() => null))
     );
@@ -308,13 +299,11 @@ export async function renderHome() {
 
     if (window.FontAwesome) FontAwesome.dom.i2svg();
 
-    // Cargamos stats de la API y los destacados en paralelo
     const [stats] = await Promise.all([
         fetchHomeStats(),
         renderDestacados(document.getElementById("dest2-container")),
     ]);
 
-    // Actualizamos los números con animación de conteo
     const statMap = {
         "stat-tipos":        stats.tipos,
         "stat-generaciones": stats.generaciones,
@@ -332,7 +321,6 @@ export async function renderHome() {
     const totalEl = document.getElementById("stat-total-pokemon");
     if (totalEl) {
         const span = totalEl;
-        // Animamos el total de Pokémon también
         const start = performance.now();
         const target = stats.totalPokemon;
         const update = (now) => {
