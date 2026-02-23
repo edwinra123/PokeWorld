@@ -855,3 +855,137 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     animation: scaleIn 0.3s ease-out;
 }
+/* ============================================================
+   FILTROS
+   ============================================================ */
+.filtros-wrap {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.filtro-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.filtro-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    padding-top: 0.35rem;
+    min-width: 90px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.filtro-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+@media (max-width: 1023px) {
+    .filtro-group {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .filtro-label {
+        min-width: unset;
+        padding-top: 0;
+    }
+
+    .filtro-chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .filtro-chips::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filtro-chip {
+        flex-shrink: 0;
+    }
+}
+
+.filtro-chip {
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1.5px solid #e5e7eb;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.filtro-chip:hover {
+    border-color: var(--chip-color, #9810FA);
+    color: var(--chip-color, #9810FA);
+    background: color-mix(in srgb, var(--chip-color, #9810FA) 8%, white);
+}
+
+.filtro-chip.active {
+    background: var(--chip-color, #9810FA);
+    border-color: var(--chip-color, #9810FA);
+    color: white;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--chip-color, #9810FA) 35%, transparent);
+}
+
+/* Generación chips sin color variable — usan el morado base */
+#chips-gen .filtro-chip:hover {
+    border-color: #9810FA;
+    color: #9810FA;
+    background: rgba(152, 16, 250, 0.06);
+}
+
+#chips-gen .filtro-chip.active {
+    background: #9810FA;
+    border-color: #9810FA;
+    color: white;
+    box-shadow: 0 2px 8px rgba(152, 16, 250, 0.3);
+}
+
+/* Dark mode */
+body.dark .filtro-chip {
+    background: var(--dark-surface-2);
+    border-color: var(--dark-border);
+    color: var(--dark-text-secondary);
+}
+
+body.dark .filtro-chip:hover {
+    border-color: var(--chip-color, #a855f7);
+    color: var(--chip-color, #a855f7);
+    background: color-mix(in srgb, var(--chip-color, #a855f7) 12%, transparent);
+}
+
+body.dark .filtro-chip.active {
+    color: white;
+}
+
+body.dark #chips-gen .filtro-chip:hover {
+    border-color: #a855f7;
+    color: #a855f7;
+    background: rgba(168, 85, 247, 0.1);
+}
+
+body.dark #chips-gen .filtro-chip.active {
+    background: #7c3aed;
+    border-color: #7c3aed;
+}
+
+body.dark .filtro-label {
+    color: var(--dark-text-muted);
+}

@@ -1,22 +1,10 @@
 /* Botón hamburguesa */
 .hamburger {
     display: none;
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 3000;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    width: 42px;
-    height: 42px;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: #1e293b;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.2s;
+}
+
+.bottom-nav {
+    display: none;
 }
 
 /* Overlay oscuro detrás del sidebar */
@@ -33,17 +21,6 @@
     display: block;
 }
 
-@media (max-width: 1023px) {
-    .hamburger {
-        display: flex;
-    }
-
-    body.dark .hamburger {
-        background: #1a1a20;
-        border-color: rgba(255,255,255,0.05);
-        color: white;
-    }
-}
 /* ─── Desktop normal (1024px - 1199px) ──────────────────────── */
 @media (max-width: 1199px) {
 
@@ -94,7 +71,7 @@
 /* ─── Tablet (768px - 1023px) ───────────────────────────────── */
 @media (max-width: 1023px) {
 
-    /* Sidebar se oculta, se usa barra inferior */
+    /* Sidebar se oculta */
     .sidebar {
         transform: translateX(-100%);
         width: 260px;
@@ -108,10 +85,10 @@
     .main-content,
     main.main-content.pagina-banner {
         margin-left: 0 !important;
-        padding-bottom: 80px; /* espacio para la nav inferior */
+        padding-bottom: 80px;
     }
 
-    /* Nav inferior para tablet y móvil */
+    /* Barra de navegación inferior */
     .bottom-nav {
         display: flex;
         position: fixed;
@@ -125,19 +102,21 @@
         align-items: center;
         justify-content: space-around;
         padding: 0 0.5rem;
-        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
     }
 
     .bottom-nav .nav-item {
         flex-direction: column;
-        gap: 4px;
-        padding: 0.5rem;
-        font-size: 0.65rem;
-        border-radius: 10px;
+        gap: 3px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.6rem;
+        border-radius: 12px;
         margin: 0;
-        min-width: 56px;
+        min-width: 52px;
         text-align: center;
         justify-content: center;
+        color: #94a3b8;
+        transition: all 0.2s;
     }
 
     .bottom-nav .nav-item i {
@@ -145,9 +124,44 @@
         width: auto;
     }
 
+    .bottom-nav .nav-item span {
+        font-size: 0.6rem;
+        font-weight: 500;
+    }
+
     .bottom-nav .nav-item.active {
-        background: var(--primary-red, #9810FA);
-        color: white;
+        background: rgba(152, 16, 250, 0.08);
+        color: #9810FA;
+    }
+
+    .bottom-nav .nav-item:hover:not(.active) {
+        background: rgba(0, 0, 0, 0.04);
+        color: #64748b;
+    }
+
+    body.dark .bottom-nav {
+        background: #16161e;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark .bottom-nav .nav-item {
+        color: #7a7890;
+    }
+
+    body.dark .bottom-nav .nav-item.active {
+        background: rgba(168, 85, 247, 0.12);
+        color: #a855f7;
+    }
+
+    body.dark .bottom-nav .nav-item:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.04);
+        color: #b0adc0;
+    }
+
+    body.dark .sidebar {
+        background: #1a1a20;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     /* Header */
@@ -254,13 +268,17 @@
 /* ─── Móvil grande (480px - 767px) ─────────────────────────── */
 @media (max-width: 767px) {
 
-    /* Pokémon cards */
     .container_cards {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: 12px;
         padding: 1rem;
     }
-
+    .dest2-main-name{
+        font-size: 20px;
+    }
+    .dest2-power-num{
+        font-size: 20px
+    }
     .card_pokemons {
         width: 100%;
         height: auto;
@@ -276,7 +294,6 @@
         height: 120px;
     }
 
-    /* Home */
     .home_section {
         padding: 1rem;
     }
@@ -308,7 +325,6 @@
         font-size: 1.5rem;
     }
 
-    /* Favoritos */
     .favorites-page {
         padding: 1rem;
     }
@@ -323,7 +339,6 @@
         width: 100%;
     }
 
-    /* Búsqueda */
     .input-search-div {
         width: 100%;
     }
@@ -332,13 +347,11 @@
         left: 0;
     }
 
-    /* Paginación */
     .pagination-container {
         gap: 0.5rem;
         flex-wrap: wrap;
     }
 
-    /* Ajustes */
     .banner_bottom_padding {
         padding: 0;
     }
@@ -351,7 +364,6 @@
         max-width: 100%;
     }
 
-    /* Banner consejo */
     .banner_consejo {
         flex-direction: column;
         gap: 0.5rem;
@@ -368,10 +380,9 @@
         padding: 0.5rem;
     }
 
-    /* Tabla legendarios */
     .tr2,
     .tr3 {
-        display: none; /* se ocultan columnas menos importantes en móvil */
+        display: none;
     }
 
     .dark_th:nth-child(3),
@@ -379,7 +390,6 @@
         display: none;
     }
 
-    /* Pokemon modal */
     .pokemon-modal {
         width: 100%;
         max-height: 95vh;
@@ -423,7 +433,6 @@
         font-size: 0.75rem;
     }
 
-    /* Home */
     .banner_principal_home {
         padding: 1.25rem;
     }
@@ -438,7 +447,6 @@
         padding: 0.4rem 1rem;
     }
 
-    /* Pokémon stack más pequeño */
     .poke-card {
         width: 90px;
         height: 145px;
@@ -449,7 +457,6 @@
         height: 90px;
     }
 
-    /* Stats */
     .banner_grid {
         flex-direction: column;
     }
@@ -458,7 +465,6 @@
         width: 100%;
     }
 
-    /* Favoritos */
     .favorites-grid {
         grid-template-columns: 1fr 1fr;
         gap: 0.75rem;
@@ -477,12 +483,10 @@
         font-size: 18px;
     }
 
-    /* Header search */
     .header_input {
         max-width: 100%;
     }
 
-    /* Modal */
     .modal-header {
         padding: 16px;
     }
@@ -500,13 +504,11 @@
         gap: 8px;
     }
 
-    /* Paginación */
     .pagination-btn {
         padding: 0.5rem 0.75rem;
         font-size: 0.8rem;
     }
 
-    /* Bottom nav */
     .bottom-nav .nav-item span {
         font-size: 0.6rem;
     }
@@ -515,7 +517,6 @@
         font-size: 1rem;
     }
 
-    /* Ajustes */
     .banner-config-bottom {
         flex-direction: column;
         align-items: flex-start;
@@ -524,27 +525,5 @@
 
     .right-config {
         align-self: flex-end;
-    }
-}
-
-@media (max-width: 1023px) {
-
-    body.dark .bottom-nav {
-        background: #1a1a20;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    body.dark .bottom-nav .nav-item {
-        color: #9ca3af;
-    }
-
-    body.dark .bottom-nav .nav-item.active {
-        background: #7c3aed;
-        color: white;
-    }
-
-    body.dark .sidebar {
-        background: #1a1a20;
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
 }

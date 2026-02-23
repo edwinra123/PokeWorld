@@ -21,8 +21,7 @@ function applyDarkMode() {
 export function navigateTo(route) {
     document.querySelectorAll(".nav-item").forEach((l) => l.classList.remove("active"));
 
-    const targetNav = document.querySelector(`[data-route="${route}"]`);
-    if (targetNav) targetNav.classList.add("active");
+    document.querySelectorAll(`[data-route="${route}"]`).forEach(el => el.classList.add("active"));
 
     document.getElementById("main-content").classList.remove("pagina-banner");
 
@@ -42,27 +41,5 @@ export function initRouter() {
 
     navigateTo("home");
 }
-const hamburger = document.getElementById("hamburger");
-const sidebar = document.querySelector(".sidebar");
 
-const overlay = document.createElement("div");
-overlay.className = "sidebar-overlay";
-document.body.appendChild(overlay);
-
-hamburger.addEventListener("click", () => {
-    sidebar.classList.toggle("open");
-    overlay.classList.toggle("active");
-});
-
-overlay.addEventListener("click", () => {
-    sidebar.classList.remove("open");
-    overlay.classList.remove("active");
-});
-
-document.querySelectorAll(".nav-item").forEach(link => {
-    link.addEventListener("click", () => {
-        sidebar.classList.remove("open");
-        overlay.classList.remove("active");
-    });
-});
 initRouter();

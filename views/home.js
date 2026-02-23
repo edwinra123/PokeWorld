@@ -204,19 +204,35 @@ export async function renderHome() {
 
         <div class="banner_grid">
             <div class="card_grid">
-                <div class="left_card"><img class="img_card" src="//icons.veryicon.com/png/o/miscellaneous/broken-linear-icon/pokemon-1.png"></div>
+                <div class="left_card">
+                    <div class="stat-icon-wrap" style="background: rgba(99,102,241,0.12); color: #6366f1;">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                </div>
                 <div class="right_card"><h1 class="number_grid">18</h1><h2>Tipos</h2></div>
             </div>
             <div class="card_grid">
-                <div class="left_card"><img class="img_card" src="//icons.veryicon.com/png/o/miscellaneous/broken-linear-icon/pokemon-1.png"></div>
+                <div class="left_card">
+                    <div class="stat-icon-wrap" style="background: rgba(16,185,129,0.12); color: #10b981;">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                </div>
                 <div class="right_card"><h1 class="number_grid">9</h1><h2>Generaciones</h2></div>
             </div>
             <div class="card_grid">
-                <div class="left_card"><img class="img_card" src="//icons.veryicon.com/png/o/miscellaneous/broken-linear-icon/pokemon-1.png"></div>
+                <div class="left_card">
+                    <div class="stat-icon-wrap" style="background: rgba(245,158,11,0.12); color: #f59e0b;">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                </div>
                 <div class="right_card"><h1 class="number_grid">48</h1><h2>Legendarios</h2></div>
             </div>
             <div class="card_grid">
-                <div class="left_card"><img class="img_card" src="//icons.veryicon.com/png/o/miscellaneous/broken-linear-icon/pokemon-1.png"></div>
+                <div class="left_card">
+                    <div class="stat-icon-wrap" style="background: rgba(239,68,68,0.12); color: #ef4444;">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                </div>
                 <div class="right_card"><h1 class="number_grid">59</h1><h2>Habilidades</h2></div>
             </div>
         </div>
