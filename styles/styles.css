@@ -139,6 +139,8 @@ body {
 
 .main-content{
     margin-left: 280px;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 .container_cards {
     display: grid;
@@ -151,4 +153,9 @@ body {
 .container_cards.compacto {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 10px;
+}
+.pagina-banner {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
