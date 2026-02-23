@@ -2,8 +2,7 @@ import { appState } from "../assets/state.js";
 import { showPokemonDetails, capitalize, padId } from "../assets/utils.js";
 
 const POKE_URL = "https://pokeapi.co/api/v2/pokemon";
-let currentPage = 1;
-const perPage = 20;
+const perPage  = 20;
 
 const TYPES = [
     { name: "fire",     label: "Fuego",    color: "#F08030" },
@@ -38,13 +37,18 @@ const GENERATIONS = [
     { value: "9", label: "Gen 9", offset: 905,  limit: 120 },
 ];
 
-let activeType = null;
-let activeGen  = null;
+// ─── Caché en memoria ─────────────────────────────────────────────────────────
+// Se descarga UNA sola vez y se reutiliza mientras la pestaña esté abierta.
+async function getAllPokemonList() {
+    if (appState.cache.pokemonList) return appState.cache.pokemonList;
+    const res  = await fetch(`${POKE_URL}?limit=1302`);
+    const data = await res.json();
+    appState.cache.pokemonList = data.results;
+    return appState.cache.pokemonList;
+}
 
 export function renderPokeLista() {
-    currentPage = 1;
-    activeType  = null;
-    activeGen   = null;
+    appState.resetPokelista();
 
     const main = document.getElementById("main-content");
     main.innerHTML = `
@@ -114,17 +118,17 @@ export function renderPokeLista() {
     document.querySelectorAll("#chips-tipo .filtro-chip").forEach(btn => {
         btn.addEventListener("click", () => {
             const tipo = btn.dataset.type;
-            if (activeType === tipo) {
-                activeType = null;
+            if (appState.pokelista.activeType === tipo) {
+                appState.pokelista.activeType = null;
                 btn.classList.remove("active");
             } else {
                 document.querySelectorAll("#chips-tipo .filtro-chip").forEach(b => b.classList.remove("active"));
-                activeType = tipo;
+                appState.pokelista.activeType = tipo;
                 btn.classList.add("active");
             }
-            activeGen = null;
+            appState.pokelista.activeGen = null;
             document.querySelectorAll("#chips-gen .filtro-chip").forEach(b => b.classList.remove("active"));
-            currentPage = 1;
+            appState.pokelista.currentPage = 1;
             loadWithFilters();
         });
     });
@@ -133,27 +137,27 @@ export function renderPokeLista() {
     document.querySelectorAll("#chips-gen .filtro-chip").forEach(btn => {
         btn.addEventListener("click", () => {
             const gen = btn.dataset.gen;
-            if (activeGen === gen) {
-                activeGen = null;
+            if (appState.pokelista.activeGen === gen) {
+                appState.pokelista.activeGen = null;
                 btn.classList.remove("active");
             } else {
                 document.querySelectorAll("#chips-gen .filtro-chip").forEach(b => b.classList.remove("active"));
-                activeGen = gen;
+                appState.pokelista.activeGen = gen;
                 btn.classList.add("active");
             }
-            activeType = null;
+            appState.pokelista.activeType = null;
             document.querySelectorAll("#chips-tipo .filtro-chip").forEach(b => b.classList.remove("active"));
-            currentPage = 1;
+            appState.pokelista.currentPage = 1;
             loadWithFilters();
         });
     });
 
     // --- Paginación ---
     document.querySelector(".prev").addEventListener("click", () => {
-        if (currentPage > 1) { currentPage--; loadWithFilters(); }
+        if (appState.pokelista.currentPage > 1) { appState.pokelista.currentPage--; loadWithFilters(); }
     });
     document.querySelector(".next").addEventListener("click", () => {
-        currentPage++;
+        appState.pokelista.currentPage++;
         loadWithFilters();
     });
 
@@ -188,21 +192,26 @@ export function renderPokeLista() {
         clearTimeout(debounceTimeout);
         const query = e.target.value.toLowerCase().trim();
         if (!query) { loadWithFilters(); return; }
+
         debounceTimeout = setTimeout(async () => {
+            showSkeletons(container, 6);
             try {
-                const res = await fetch(`${POKE_URL}?limit=1000`);
-                const data = await res.json();
-                const results = data.results.filter(p => p.name.startsWith(query)).slice(0, 10);
+                // Usamos la caché — si ya se descargó no hace ninguna petición extra
+                const list    = await getAllPokemonList();
+                const results = list.filter(p => p.name.startsWith(query)).slice(0, 12);
+
                 container.innerHTML = "";
                 if (results.length === 0) {
-                    container.innerHTML = "<p style='color:red;'>No se encontraron coincidencias</p>";
+                    container.innerHTML = `<p style="color:red;padding:1rem;">No se encontraron coincidencias</p>`;
                     return;
                 }
+
+                // Solo descargamos los detalles de los resultados filtrados (máx 12)
                 const pokemons = await Promise.all(results.map(p => fetch(p.url).then(r => r.json())));
                 pokemons.forEach(p => container.appendChild(createCard(p)));
                 applyCompactMode(container);
             } catch (err) {
-                container.innerHTML = "<p style='color:red;'>Error al buscar</p>";
+                container.innerHTML = `<p style="color:red;">Error al buscar</p>`;
             }
         }, 300);
     });
@@ -213,13 +222,14 @@ async function loadWithFilters() {
     if (!container) return;
     showSkeletons(container);
 
+    const { activeType, activeGen, currentPage } = appState.pokelista;
+
     try {
         if (activeType) {
-            // Filtrar por tipo
             const res  = await fetch(`https://pokeapi.co/api/v2/type/${activeType}`);
             const data = await res.json();
-            const all  = data.pokemon.map(p => p.pokemon);
-            const total = all.length;
+            const all    = data.pokemon.map(p => p.pokemon);
+            const total  = all.length;
             const offset = (currentPage - 1) * perPage;
             const slice  = all.slice(offset, offset + perPage);
             const pokemons = await Promise.all(slice.map(p => fetch(p.url).then(r => r.json())));
@@ -229,8 +239,7 @@ async function loadWithFilters() {
             applyCompactMode(container);
 
         } else if (activeGen) {
-            // Filtrar por generación
-            const gen = GENERATIONS.find(g => g.value === activeGen);
+            const gen  = GENERATIONS.find(g => g.value === activeGen);
             const res  = await fetch(`${POKE_URL}?limit=${gen.limit}&offset=${gen.offset}`);
             const data = await res.json();
             const slice = data.results.slice((currentPage - 1) * perPage, currentPage * perPage);
@@ -241,7 +250,6 @@ async function loadWithFilters() {
             applyCompactMode(container);
 
         } else {
-            // Sin filtro — comportamiento original
             await loadPage(currentPage);
         }
     } catch (err) {
@@ -307,5 +315,5 @@ function createCard(poke) {
 
 function setupPagination(total) {
     const numbers = document.querySelector(".numbers");
-    if (numbers) numbers.innerHTML = `Página ${currentPage} / ${Math.ceil(total / perPage)}`;
+    if (numbers) numbers.innerHTML = `Página ${appState.pokelista.currentPage} / ${Math.ceil(total / perPage)}`;
 }

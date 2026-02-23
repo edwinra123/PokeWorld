@@ -1,37 +1,46 @@
 import { showPokemonDetails, capitalize, translateType } from "../assets/utils.js";
+import { appState } from "../assets/state.js";
 
-const POKE_URL = "https://pokeapi.co/api/v2/pokemon";
+const POKE_URL     = "https://pokeapi.co/api/v2/pokemon";
+const SPECIES_URL  = "https://pokeapi.co/api/v2/pokemon-species";
 
-const legendarios = [
-    "articuno", "zapdos", "moltres", "mewtwo",
-    "raikou", "entei", "suicune", "lugia", "ho-oh",
-    "regirock", "regice", "registeel", "latias", "latios",
-    "kyogre", "groudon", "rayquaza",
-    "dialga", "palkia", "giratina-altered",
-];
+// ─── Mapa de generación → región ─────────────────────────────────────────────
+const GEN_REGION = {
+    1: "Kanto", 2: "Johto", 3: "Hoenn", 4: "Sinnoh",
+    5: "Unova", 6: "Kalos", 7: "Alola", 8: "Galar", 9: "Paldea",
+};
 
-const legendariosInfo = [
-    { nombre: "articuno",        id: 144, region: "Kanto"  },
-    { nombre: "zapdos",          id: 145, region: "Kanto"  },
-    { nombre: "moltres",         id: 146, region: "Kanto"  },
-    { nombre: "mewtwo",          id: 150, region: "Kanto"  },
-    { nombre: "raikou",          id: 243, region: "Johto"  },
-    { nombre: "entei",           id: 244, region: "Johto"  },
-    { nombre: "suicune",         id: 245, region: "Johto"  },
-    { nombre: "lugia",           id: 249, region: "Johto"  },
-    { nombre: "ho-oh",           id: 250, region: "Johto"  },
-    { nombre: "regirock",        id: 377, region: "Hoenn"  },
-    { nombre: "regice",          id: 378, region: "Hoenn"  },
-    { nombre: "registeel",       id: 379, region: "Hoenn"  },
-    { nombre: "latias",          id: 380, region: "Hoenn"  },
-    { nombre: "latios",          id: 381, region: "Hoenn"  },
-    { nombre: "kyogre",          id: 382, region: "Hoenn"  },
-    { nombre: "groudon",         id: 383, region: "Hoenn"  },
-    { nombre: "rayquaza",        id: 384, region: "Hoenn"  },
-    { nombre: "dialga",          id: 483, region: "Sinnoh" },
-    { nombre: "palkia",          id: 484, region: "Sinnoh" },
-    { nombre: "giratina-altered",id: 487, region: "Sinnoh" },
-];
+// ─── Caché en memoria ─────────────────────────────────────────────────────────
+// Se carga UNA sola vez desde la API y se reutiliza en appState.cache.legendariosInfo
+async function getLegendariosInfo() {
+    if (appState.cache.legendariosInfo) return appState.cache.legendariosInfo;
+
+    const res  = await fetch(`${SPECIES_URL}?limit=1302`);
+    const data = await res.json();
+
+    const checks = await Promise.all(
+        data.results.map(s =>
+            fetch(s.url)
+                .then(r => r.json())
+                .then(sp => ({ sp, url: s.url }))
+                .catch(() => null)
+        )
+    );
+
+    appState.cache.legendariosInfo = checks
+        .filter(item => item && (item.sp.is_legendary || item.sp.is_mythical))
+        .map(({ sp }) => {
+            const genNum = parseInt(sp.generation.url.split("/").filter(Boolean).pop(), 10);
+            return {
+                nombre: sp.name,
+                id:     sp.id,
+                region: GEN_REGION[genNum] || `Gen ${genNum}`,
+            };
+        })
+        .sort((a, b) => a.id - b.id);
+
+    return appState.cache.legendariosInfo;
+}
 
 const coloresClaro = {
     psychic: "#fce4ec", dragon: "#ede7f6", water: "#e3f2fd", fire: "#fff3e0",
@@ -50,10 +59,9 @@ const iconosTipo = {
 
 const STAT_MAP = { attack: "ataque", speed: "velocidad", defense: "defensa" };
 
-const pokemonCache = {};
-
 async function fetchPokemon(nombre) {
-    if (pokemonCache[nombre]) return pokemonCache[nombre];
+    const cached = appState.getCachedPokemon(nombre);
+    if (cached) return cached;
     try {
         const res = await fetch(`${POKE_URL}/${nombre}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -64,32 +72,27 @@ async function fetchPokemon(nombre) {
             if (STAT_MAP[s.stat.name]) stats[STAT_MAP[s.stat.name]] = s.base_stat;
         });
 
-        const speciesRes = await fetch(data.species.url);
+        const speciesRes  = await fetch(data.species.url);
         const speciesData = await speciesRes.json();
-        const generacion = speciesData.generation.url.split("/").filter(Boolean).pop();
+        const generacion  = speciesData.generation.url.split("/").filter(Boolean).pop();
 
         const pokemon = {
-            ...data,            
+            ...data,
             nombre: data.name,
             imagen: data.sprites.other["official-artwork"].front_default,
             imagenPequeña: data.sprites.front_default,
             tipos: data.types.map((t) => t.type.name),
             stats,
             generacion,
+            stats_raw: data.stats,
         };
 
-        // guardar stats raw para el modal legendario
-        pokemon.stats_raw = data.stats;
-        pokemonCache[nombre] = pokemon;
+        appState.cachePokemon(nombre, pokemon);
         return pokemon;
     } catch (err) {
         console.error("Error al obtener Pokémon:", err);
         return null;
     }
-}
-
-function obtenerLegendariosAleatorios(cantidad = 3) {
-    return [...legendarios].sort(() => Math.random() - 0.5).slice(0, cantidad);
 }
 
 function skeletonDestacado(contenedor) {
@@ -109,7 +112,13 @@ function skeletonDestacado(contenedor) {
 async function cargarDestacados() {
     const contenedores = document.querySelectorAll(".lg_destacados");
     contenedores.forEach(c => skeletonDestacado(c));
-    const seleccionados = obtenerLegendariosAleatorios(3);
+
+    // Elegimos 3 aleatorios de la lista dinámica
+    const lista       = await getLegendariosInfo();
+    const seleccionados = [...lista]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3)
+        .map(l => l.nombre);
 
     const pokemons = await Promise.all(seleccionados.map(fetchPokemon));
 
@@ -179,12 +188,14 @@ async function cargarListaLegendarios() {
         </tr>
     `).join("");
 
-    const pokemons = await Promise.all(legendariosInfo.map((l) => fetchPokemon(l.nombre)));
+    // Obtenemos la lista dinámica (ya cacheada si cargarDestacados se llamó antes)
+    const lista    = await getLegendariosInfo();
+    const pokemons = await Promise.all(lista.map((l) => fetchPokemon(l.nombre)));
 
     tbody.innerHTML = "";
     pokemons.forEach((pokemon, i) => {
         if (!pokemon) return;
-        const region = legendariosInfo[i].region;
+        const region = lista[i].region;
         const tr = document.createElement("tr");
         tr.className = "tr_table";
         tr.style.cursor = "pointer";
@@ -196,7 +207,7 @@ async function cargarListaLegendarios() {
                     <span>${capitalize(pokemon.nombre)}</span>
                 </div>
             </td>
-            <td class="tr2">${pokemon.tipos.join(" / ")}</td>
+            <td class="tr2">${pokemon.tipos.map(t => translateType(t)).join(" / ")}</td>
             <td class="tr3">${region}</td>
             <td class="td-btn">
                 <button class="btn-detalles">Ver Detalles</button>

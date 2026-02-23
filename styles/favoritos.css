@@ -156,7 +156,7 @@
 .remove-favorite::before {
     content: '❤';
     font-size: 18px;
-    color: #ff6b6b;
+    color: #9810FA;
 }
 
 .favorite-card-image {
@@ -194,7 +194,7 @@
 .favorite-card-info h3 {
     font-size: 24px;
     font-weight: 800;
-    color: #ff6b6b;
+    color: #9810FA;
     margin: 0;
     flex: 1;
 }

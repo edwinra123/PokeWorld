@@ -161,13 +161,13 @@
 }
 
 .favorite-btn:hover {
-    border-color: #ff6b6b;
-    color: #ff6b6b;
+    border-color: #9810FA;
+    color: #9810FA;
 }
 
 .favorite-btn.active {
-    background: #ff6b6b;
-    border-color: #ff6b6b;
+    background: #9810FA;
+    border-color: #9810FA;
     color: white;
 }
 

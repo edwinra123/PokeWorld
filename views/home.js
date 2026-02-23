@@ -1,6 +1,62 @@
 import { appState } from "../assets/state.js";
 import { navigateTo } from "../assets/routes.js";
 
+// ─── Caché de stats del Home ──────────────────────────────────────────────────
+let homeStatsCache = null;
+
+async function fetchHomeStats() {
+    if (homeStatsCache) return homeStatsCache;
+
+    const [tipos, generaciones, especies, habilidades] = await Promise.all([
+        fetch("https://pokeapi.co/api/v2/type?limit=100").then(r => r.json()),
+        fetch("https://pokeapi.co/api/v2/generation?limit=100").then(r => r.json()),
+        fetch("https://pokeapi.co/api/v2/pokemon-species?limit=1302").then(r => r.json()),
+        fetch("https://pokeapi.co/api/v2/ability?limit=1000").then(r => r.json()),
+    ]);
+
+    // Tipos: excluimos "unknown" y "shadow" que no son tipos de combate reales
+    const tiposReales = tipos.results.filter(t => t.name !== "unknown" && t.name !== "shadow");
+
+    // Legendarios + míticos: contamos del listado de especies
+    // (solo count, sin descargar cada especie)
+    // Usamos el endpoint de pokemon-species con is_legendary/is_mythical
+    // Como no podemos filtrar en la URL, usamos una aproximación eficiente:
+    // consultamos la generación para obtener el count total de Pokémon
+    const totalPokemon = especies.count;
+
+    // Para legendarios usamos los endpoints de grupo de egg "undiscovered" como proxy
+    // Mejor: hacemos solo las peticiones de species con un límite razonable en lotes
+    const speciesData = await Promise.all(
+        especies.results.map(s => fetch(s.url).then(r => r.json()).catch(() => null))
+    );
+    const totalLegendarios = speciesData.filter(s => s && (s.is_legendary || s.is_mythical)).length;
+
+    homeStatsCache = {
+        tipos:        tiposReales.length,
+        generaciones: generaciones.count,
+        legendarios:  totalLegendarios,
+        habilidades:  habilidades.count,
+        totalPokemon,
+    };
+
+    return homeStatsCache;
+}
+
+// Animación de conteo numérico
+function animateCount(el, target, duration = 1200) {
+    const start     = performance.now();
+    const startVal  = 0;
+    const update    = (now) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // easeOutExpo
+        const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+        el.textContent = Math.round(startVal + (target - startVal) * ease).toLocaleString();
+        if (progress < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+}
+
 const stackPokemons = [
     { id: 143, name: "Snorlax",    color: "#6B8CFF", tipo: "Normal"         },
     { id: 130, name: "Gyarados",   color: "#4FC3F7", tipo: "Water · Flying" },
@@ -182,7 +238,7 @@ export async function renderHome() {
     <div class="home_section">
         <div class="banner_principal_home">
             <div class="banner_left_h">
-                <span class="sasw">Pokédex · 1,025 Pokémon</span>
+                <span class="sasw">Pokédex · <span id="stat-total-pokemon">1,025</span> Pokémon</span>
                 <h1>Descubre el mundo <span class="text_banner-home">Pokémon</span></h1>
                 <p>Explora más de 1,000 Pokémon con estadísticas detalladas, 
                 cadenas de evolución, habilidades y mucho más.</p>
@@ -209,7 +265,7 @@ export async function renderHome() {
                         <i class="fas fa-tag"></i>
                     </div>
                 </div>
-                <div class="right_card"><h1 class="number_grid">18</h1><h2>Tipos</h2></div>
+                <div class="right_card"><h1 class="number_grid stat-skeleton" id="stat-tipos">—</h1><h2>Tipos</h2></div>
             </div>
             <div class="card_grid">
                 <div class="left_card">
@@ -217,7 +273,7 @@ export async function renderHome() {
                         <i class="fas fa-globe"></i>
                     </div>
                 </div>
-                <div class="right_card"><h1 class="number_grid">9</h1><h2>Generaciones</h2></div>
+                <div class="right_card"><h1 class="number_grid stat-skeleton" id="stat-generaciones">—</h1><h2>Generaciones</h2></div>
             </div>
             <div class="card_grid">
                 <div class="left_card">
@@ -225,7 +281,7 @@ export async function renderHome() {
                         <i class="fas fa-crown"></i>
                     </div>
                 </div>
-                <div class="right_card"><h1 class="number_grid">48</h1><h2>Legendarios</h2></div>
+                <div class="right_card"><h1 class="number_grid stat-skeleton" id="stat-legendarios">—</h1><h2>Legendarios</h2></div>
             </div>
             <div class="card_grid">
                 <div class="left_card">
@@ -233,7 +289,7 @@ export async function renderHome() {
                         <i class="fas fa-bolt"></i>
                     </div>
                 </div>
-                <div class="right_card"><h1 class="number_grid">59</h1><h2>Habilidades</h2></div>
+                <div class="right_card"><h1 class="number_grid stat-skeleton" id="stat-habilidades">—</h1><h2>Habilidades</h2></div>
             </div>
         </div>
 
@@ -251,5 +307,41 @@ export async function renderHome() {
     });
 
     if (window.FontAwesome) FontAwesome.dom.i2svg();
-    await renderDestacados(document.getElementById("dest2-container"));
+
+    // Cargamos stats de la API y los destacados en paralelo
+    const [stats] = await Promise.all([
+        fetchHomeStats(),
+        renderDestacados(document.getElementById("dest2-container")),
+    ]);
+
+    // Actualizamos los números con animación de conteo
+    const statMap = {
+        "stat-tipos":        stats.tipos,
+        "stat-generaciones": stats.generaciones,
+        "stat-legendarios":  stats.legendarios,
+        "stat-habilidades":  stats.habilidades,
+    };
+
+    Object.entries(statMap).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove("stat-skeleton");
+        animateCount(el, value);
+    });
+
+    const totalEl = document.getElementById("stat-total-pokemon");
+    if (totalEl) {
+        const span = totalEl;
+        // Animamos el total de Pokémon también
+        const start = performance.now();
+        const target = stats.totalPokemon;
+        const update = (now) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / 1400, 1);
+            const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            span.textContent = Math.round(target * ease).toLocaleString();
+            if (progress < 1) requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+    }
 }
