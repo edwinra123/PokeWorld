@@ -891,7 +891,63 @@
     gap: 0.4rem;
 }
 
+/* Botón toggle — solo visible en móvil */
+.filtros-toggle {
+    display: none;
+}
+
 @media (max-width: 1023px) {
+    .filtros-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        border: 1.5px solid #e5e7eb;
+        background: white;
+        color: #374151;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .filtros-toggle:hover {
+        border-color: #9810FA;
+        color: #9810FA;
+    }
+
+    .filtros-toggle.open {
+        background: #9810FA;
+        border-color: #9810FA;
+        color: white;
+    }
+
+    .filtros-toggle-arrow {
+        margin-left: auto;
+        transition: transform 0.2s;
+    }
+
+    .filtros-toggle.open .filtros-toggle-arrow {
+        transform: rotate(180deg);
+    }
+
+    /* Panel colapsable */
+    .filtros-wrap {
+        display: none;
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+    }
+
+    .filtros-wrap.open {
+        display: flex;
+    }
+
     .filtro-group {
         flex-direction: column;
         gap: 0.4rem;
@@ -905,9 +961,12 @@
     .filtro-chips {
         flex-wrap: nowrap;
         overflow-x: auto;
+        overflow-y: hidden;
         padding-bottom: 0.25rem;
         scrollbar-width: none;
         -ms-overflow-style: none;
+        width: 0;
+        min-width: 100%;
     }
 
     .filtro-chips::-webkit-scrollbar {
@@ -916,6 +975,33 @@
 
     .filtro-chip {
         flex-shrink: 0;
+    }
+
+    .filtros-wrap {
+        overflow: hidden;
+    }
+
+    /* Dark mode */
+    body.dark .filtros-toggle {
+        background: var(--dark-surface-2);
+        border-color: var(--dark-border);
+        color: var(--dark-text-secondary);
+    }
+
+    body.dark .filtros-toggle:hover {
+        border-color: #a855f7;
+        color: #a855f7;
+    }
+
+    body.dark .filtros-toggle.open {
+        background: #7c3aed;
+        border-color: #7c3aed;
+        color: white;
+    }
+
+    body.dark .filtros-wrap {
+        background: var(--dark-surface-2);
+        border-color: var(--dark-border);
     }
 }
 
@@ -988,4 +1074,59 @@ body.dark #chips-gen .filtro-chip.active {
 
 body.dark .filtro-label {
     color: var(--dark-text-muted);
+}
+
+/* ============================================================
+   SKELETON LOADER
+   ============================================================ */
+@keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+}
+
+.skeleton-card {
+    pointer-events: none;
+    cursor: default !important;
+}
+
+.skeleton-img {
+    height: 200px;
+    margin: 1rem;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-info {
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.skeleton-line {
+    border-radius: 999px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-name {
+    width: 70%;
+    height: 16px;
+}
+
+.skeleton-id {
+    width: 40%;
+    height: 12px;
+}
+
+/* Dark mode */
+body.dark .skeleton-img,
+body.dark .skeleton-line {
+    background: linear-gradient(90deg, #1e1e28 25%, #252530 50%, #1e1e28 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
 }

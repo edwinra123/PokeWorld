@@ -57,7 +57,11 @@ export function renderPokeLista() {
             </div>
 
             <!-- FILTROS -->
-            <div class="filtros-wrap">
+            <button class="filtros-toggle" id="filtros-toggle">
+                <i class="fas fa-sliders-h"></i> Filtros
+                <i class="fas fa-chevron-down filtros-toggle-arrow"></i>
+            </button>
+            <div class="filtros-wrap" id="filtros-wrap">
                 <!-- Por Tipo -->
                 <div class="filtro-group">
                     <span class="filtro-label"><i class="fas fa-tag"></i> Tipo</span>
@@ -95,6 +99,16 @@ export function renderPokeLista() {
 
     const searchInput = document.getElementById("searchInput");
     const container   = document.querySelector(".container_cards");
+
+    // --- Toggle filtros en móvil ---
+    const toggleBtn = document.getElementById("filtros-toggle");
+    const filtrosWrap = document.getElementById("filtros-wrap");
+    if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            const isOpen = filtrosWrap.classList.toggle("open");
+            toggleBtn.classList.toggle("open", isOpen);
+        });
+    }
 
     // --- Chips de Tipo ---
     document.querySelectorAll("#chips-tipo .filtro-chip").forEach(btn => {
@@ -156,7 +170,7 @@ export function renderPokeLista() {
         if (e.key !== "Enter") return;
         const query = searchInput.value.toLowerCase().trim();
         if (!query) return;
-        container.innerHTML = "<p>Buscando Pokémon...</p>";
+        showSkeletons(container, 4);
         try {
             const res = await fetch(`${POKE_URL}/${query}`);
             if (!res.ok) throw new Error("Pokémon no encontrado");
@@ -197,7 +211,7 @@ export function renderPokeLista() {
 async function loadWithFilters() {
     const container = document.querySelector(".container_cards");
     if (!container) return;
-    container.innerHTML = "<p>Cargando Pokémon...</p>";
+    showSkeletons(container);
 
     try {
         if (activeType) {
@@ -239,7 +253,7 @@ async function loadWithFilters() {
 async function loadPage(page) {
     const container = document.querySelector(".container_cards");
     if (!container) return;
-    container.innerHTML = "<p>Cargando Pokémon...</p>";
+    showSkeletons(container);
     try {
         const offset = (page - 1) * perPage;
         const res  = await fetch(`${POKE_URL}?limit=${perPage}&offset=${offset}`);
@@ -253,6 +267,19 @@ async function loadPage(page) {
         container.innerHTML = "<p>Error al cargar Pokémon</p>";
         console.error(err);
     }
+}
+
+
+function showSkeletons(container, count = 20) {
+    container.innerHTML = Array(count).fill(`
+        <div class="card_pokemons skeleton-card">
+            <div class="skeleton-img"></div>
+            <div class="skeleton-info">
+                <div class="skeleton-line skeleton-name"></div>
+                <div class="skeleton-line skeleton-id"></div>
+            </div>
+        </div>
+    `).join("");
 }
 
 function applyCompactMode(container) {

@@ -25,3 +25,452 @@
 .lg_destacados:hover {
     transform: translateY(-5px);
 }
+/* ============================================================
+   SKELETON LOADER — LEGENDARIOS
+   ============================================================ */
+@keyframes shimmer-lg {
+    0%   { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+}
+
+.skel-bg {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 600px 100%;
+    animation: shimmer-lg 1.4s infinite linear;
+    border-radius: 8px;
+}
+
+/* Skeleton destacados */
+.lg_destacados:has(.skel-lg-img) {
+    background: #f5f5f5 !important;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.skel-lg-img {
+    position: absolute !important;
+    bottom: 0;
+    right: 10px;
+    width: 180px;
+    height: 180px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #e8e8e8 25%, #d8d8d8 50%, #e8e8e8 75%);
+    background-size: 600px 100%;
+    animation: shimmer-lg 1.4s infinite linear;
+}
+
+.skel-lg-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 1;
+}
+
+.skel-lg-line {
+    border-radius: 999px;
+    background: linear-gradient(90deg, #e8e8e8 25%, #d8d8d8 50%, #e8e8e8 75%);
+    background-size: 600px 100%;
+    animation: shimmer-lg 1.4s infinite linear;
+}
+
+.skel-lg-tipo  { width: 60%;  height: 12px; }
+.skel-lg-nombre { width: 80%; height: 28px; }
+
+.skel-lg-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.skel-lg-stat {
+    width: 60px;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #e8e8e8 25%, #d8d8d8 50%, #e8e8e8 75%);
+    background-size: 600px 100%;
+    animation: shimmer-lg 1.4s infinite linear;
+}
+
+/* Skeleton tabla */
+.skel-td {
+    height: 14px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 600px 100%;
+    animation: shimmer-lg 1.4s infinite linear;
+}
+
+.skel-td-sm  { width: 40px;  }
+.skel-td-md  { width: 100px; }
+.skel-td-btn { width: 80px; height: 28px; border-radius: 8px; }
+
+.skel-td-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 600px 100%;
+    animation: shimmer-lg 1.4s infinite linear;
+}
+
+/* Dark mode */
+body.dark .lg_destacados:has(.skel-lg-img) {
+    background: var(--dark-surface-2) !important;
+}
+
+body.dark .skel-lg-img,
+body.dark .skel-lg-line,
+body.dark .skel-lg-stat,
+body.dark .skel-td,
+body.dark .skel-td-circle {
+    background: linear-gradient(90deg, #1e1e28 25%, #252530 50%, #1e1e28 75%);
+    background-size: 600px 100%;
+    animation: shimmer-lg 1.4s infinite linear;
+}
+
+/* ============================================================
+   MODAL ESPECIAL LEGENDARIOS
+   ============================================================ */
+.lg-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lg-modal-overlay.active {
+    opacity: 1;
+}
+
+.lg-modal {
+    background: white;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    animation: lgModalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    scrollbar-width: none;
+}
+
+.lg-modal::-webkit-scrollbar { display: none; }
+
+@keyframes lgModalIn {
+    from { transform: translateY(30px) scale(0.95); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.lg-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.2s;
+}
+
+.lg-modal-close:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Header con gradiente */
+.lg-modal-header {
+    padding: 2rem 2rem 0;
+    border-radius: 24px 24px 0 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    min-height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.lg-modal-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.lg-modal-header-info {
+    position: relative;
+    z-index: 2;
+    padding-bottom: 1.5rem;
+}
+
+.lg-modal-numero {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.1em;
+}
+
+.lg-modal-nombre {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: white;
+    margin: 0.2rem 0 0.6rem;
+    text-transform: capitalize;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    line-height: 1;
+}
+
+.lg-modal-tipos {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.lg-modal-type-badge {
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    text-transform: capitalize;
+}
+
+.lg-modal-img {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.3));
+    margin-bottom: -10px;
+}
+
+/* Body */
+.lg-modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Datos físicos */
+.lg-modal-fisicos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+}
+
+.lg-modal-fisico-item {
+    background: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 0.875rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    text-align: center;
+}
+
+.lg-modal-fisico-item i {
+    font-size: 0.9rem;
+    color: #9ca3af;
+}
+
+.lg-modal-fisico-val {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1;
+}
+
+.lg-modal-fisico-label {
+    font-size: 0.65rem;
+    color: #9ca3af;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Stats */
+.lg-modal-section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+    margin: 0 0 0.875rem;
+}
+
+.lg-modal-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.lg-modal-stat-row {
+    display: grid;
+    grid-template-columns: 90px 36px 1fr;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lg-modal-stat-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.lg-modal-stat-val {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #111827;
+    text-align: right;
+}
+
+.lg-modal-stat-track {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.lg-modal-stat-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s ease;
+}
+
+/* Habilidades */
+.lg-modal-abilities {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.lg-modal-ability {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.lg-modal-hidden-badge {
+    background: #fce7f3;
+    color: #be185d;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+}
+
+/* Botón favorito */
+.lg-modal-fav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.875rem;
+    border-radius: 14px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.lg-modal-fav-btn:hover {
+    border-color: #f59e0b;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.lg-modal-fav-btn.active {
+    background: #f59e0b;
+    border-color: #f59e0b;
+    color: white;
+}
+
+/* Dark mode */
+body.dark .lg-modal {
+    background: var(--dark-surface);
+}
+
+body.dark .lg-modal-fisico-item {
+    background: var(--dark-surface-2);
+    border-color: var(--dark-border);
+}
+
+body.dark .lg-modal-fisico-val {
+    color: var(--dark-text-primary);
+}
+
+body.dark .lg-modal-stat-val {
+    color: var(--dark-text-primary);
+}
+
+body.dark .lg-modal-stat-track {
+    background: var(--dark-surface-3);
+}
+
+body.dark .lg-modal-ability {
+    background: var(--dark-surface-2);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+body.dark .lg-modal-fav-btn {
+    background: var(--dark-surface-2);
+    border-color: var(--dark-border);
+    color: var(--dark-text-secondary);
+}
+
+body.dark .lg-modal-section-title {
+    color: var(--dark-text-muted);
+}
+
+@media (max-width: 479px) {
+    .lg-modal-fisicos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .lg-modal-nombre {
+        font-size: 1.75rem;
+    }
+
+    .lg-modal-img {
+        width: 120px;
+        height: 120px;
+    }
+}
