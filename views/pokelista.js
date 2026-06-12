@@ -188,6 +188,7 @@ export function renderPokeLista() {
         if (e.key !== "Enter") return;
         const query = searchInput.value.toLowerCase().trim();
         if (!query) return;
+        appState.pokelista.currentPage = 1;
         showSkeletons(container, 4);
         try {
             const res = await fetch(`${POKE_URL}/${query}`);
@@ -207,6 +208,7 @@ export function renderPokeLista() {
         clearTimeout(debounceTimeout);
         const query = e.target.value.toLowerCase().trim();
         if (!query) { loadWithFilters(); return; }
+        appState.pokelista.currentPage = 1;
 
         debounceTimeout = setTimeout(async () => {
             showSkeletons(container, 6);
@@ -218,6 +220,7 @@ export function renderPokeLista() {
                 container.innerHTML = "";
                 if (results.length === 0) {
                     container.innerHTML = `<p style="color:red;padding:1rem;">No se encontraron coincidencias</p>`;
+                    setupPagination(0);
                     return;
                 }
 
