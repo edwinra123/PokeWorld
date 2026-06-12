@@ -3,6 +3,7 @@ import { renderPokeLista } from "../views/pokelista.js";
 import { renderFavoritos } from "../views/favoritos.js";
 import { renderLegendarios } from "../views/legendarios.js";
 import { renderAjustes } from "../views/ajustes.js";
+import { appState } from "./state.js";
 
 const routes = {
     home: renderHome,
@@ -13,7 +14,7 @@ const routes = {
 };
 
 function applyDarkMode() {
-    const isDark = localStorage.getItem("darkMode") === "true";
+    const isDark = appState.prefs.darkMode;
     document.documentElement.classList.toggle("dark", isDark);
     document.body.classList.toggle("dark", isDark);
 }
@@ -26,6 +27,7 @@ export function navigateTo(route) {
     document.getElementById("main-content").classList.remove("pagina-banner");
 
     if (routes[route]) {
+        appState.currentRoute = route;
         routes[route]();
         applyDarkMode();
     }

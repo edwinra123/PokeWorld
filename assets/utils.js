@@ -1,3 +1,5 @@
+import { appState } from "./state.js";
+
 // ─── Traducciones ────────────────────────────────────────────────────────────
 
 export function translateType(type) {
@@ -30,10 +32,21 @@ export function padId(id) {
     return "#" + String(id).padStart(3, "0");
 }
 
+function readJSONStorage(key, fallback) {
+    try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+    } catch {
+        localStorage.removeItem(key);
+        return fallback;
+    }
+}
+
 // ─── Favoritos (localStorage) ─────────────────────────────────────────────────
 
 export function getFavorites() {
-    return JSON.parse(localStorage.getItem("pokemonFavorites")) || [];
+    const favorites = readJSONStorage("pokemonFavorites", []);
+    return Array.isArray(favorites) ? favorites : [];
 }
 
 export function saveFavorites(favs) {
@@ -43,24 +56,86 @@ export function saveFavorites(favs) {
 export function toggleFavorite(poke, button) {
     let favorites = getFavorites();
     const index = favorites.findIndex((f) => f.id === poke.id);
+    const label = button.querySelector("span");
 
     if (index !== -1) {
         favorites.splice(index, 1);
         button.classList.remove("active");
-        button.querySelector("span").textContent = "Agregar a Favoritos";
+        if (label) label.textContent = "Agregar a Favoritos";
         showNotification("❌ Eliminado de favoritos");
     } else {
         favorites.push({
             id: poke.id,
-            name: poke.name,
-            image: poke.sprites.other["official-artwork"].front_default,
+            name: poke.name || poke.nombre,
+            image: poke.sprites?.other?.["official-artwork"]?.front_default || poke.imagen,
         });
         button.classList.add("active");
-        button.querySelector("span").textContent = "Quitar de Favoritos";
+        if (label) label.textContent = "Quitar de Favoritos";
         showNotification("⭐ Agregado a favoritos");
     }
 
     saveFavorites(favorites);
+}
+
+// ─── Datos compartidos de PokéAPI ─────────────────────────────────────────────
+
+const SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species";
+const LEGENDARIOS_CACHE_KEY = "pokeWorldLegendariosInfo";
+const LEGENDARIOS_CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
+const GEN_REGION = {
+    1: "Kanto", 2: "Johto", 3: "Hoenn", 4: "Sinnoh",
+    5: "Unova", 6: "Kalos", 7: "Alola", 8: "Galar", 9: "Paldea",
+};
+
+async function fetchJSON(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+}
+
+export async function getLegendarySpeciesInfo() {
+    if (appState.cache.legendariosInfo) return appState.cache.legendariosInfo;
+
+    const cached = readJSONStorage(LEGENDARIOS_CACHE_KEY, null);
+    if (cached?.expiresAt > Date.now() && Array.isArray(cached.data)) {
+        appState.cache.legendariosInfo = cached.data;
+        return appState.cache.legendariosInfo;
+    }
+
+    const data = await fetchJSON(`${SPECIES_URL}?limit=1302`);
+    const checks = [];
+    const batchSize = 25;
+
+    for (let i = 0; i < data.results.length; i += batchSize) {
+        const batch = data.results.slice(i, i + batchSize);
+        const result = await Promise.all(
+            batch.map(s =>
+                fetchJSON(s.url)
+                    .then(sp => ({ sp }))
+                    .catch(() => null)
+            )
+        );
+        checks.push(...result);
+    }
+
+    appState.cache.legendariosInfo = checks
+        .filter(item => item && (item.sp.is_legendary || item.sp.is_mythical))
+        .map(({ sp }) => {
+            const genNum = parseInt(sp.generation.url.split("/").filter(Boolean).pop(), 10);
+            return {
+                nombre: sp.name,
+                id:     sp.id,
+                region: GEN_REGION[genNum] || `Gen ${genNum}`,
+            };
+        })
+        .sort((a, b) => a.id - b.id);
+
+    localStorage.setItem(LEGENDARIOS_CACHE_KEY, JSON.stringify({
+        expiresAt: Date.now() + LEGENDARIOS_CACHE_TTL,
+        data: appState.cache.legendariosInfo,
+    }));
+
+    return appState.cache.legendariosInfo;
 }
 
 // ─── Notificación ─────────────────────────────────────────────────────────────
