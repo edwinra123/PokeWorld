@@ -1,36 +1,32 @@
 import { appState } from "../assets/state.js";
 import { navigateTo } from "../assets/routes.js";
-
-let homeStatsCache = null;
+import { getLegendarySpeciesInfo } from "../assets/utils.js";
 
 async function fetchHomeStats() {
-    if (homeStatsCache) return homeStatsCache;
+    if (appState.cache.homeStats) return appState.cache.homeStats;
 
-    const [tipos, generaciones, especies, habilidades] = await Promise.all([
+    const [tipos, generaciones, especies, habilidades, legendarios] = await Promise.all([
         fetch("https://pokeapi.co/api/v2/type?limit=100").then(r => r.json()),
         fetch("https://pokeapi.co/api/v2/generation?limit=100").then(r => r.json()),
         fetch("https://pokeapi.co/api/v2/pokemon-species?limit=1302").then(r => r.json()),
         fetch("https://pokeapi.co/api/v2/ability?limit=1000").then(r => r.json()),
+        getLegendarySpeciesInfo(),
     ]);
 
     const tiposReales = tipos.results.filter(t => t.name !== "unknown" && t.name !== "shadow");
 
 
     const totalPokemon = especies.count;
-    const speciesData = await Promise.all(
-        especies.results.map(s => fetch(s.url).then(r => r.json()).catch(() => null))
-    );
-    const totalLegendarios = speciesData.filter(s => s && (s.is_legendary || s.is_mythical)).length;
 
-    homeStatsCache = {
+    appState.cache.homeStats = {
         tipos:        tiposReales.length,
         generaciones: generaciones.count,
-        legendarios:  totalLegendarios,
+        legendarios:  legendarios.length,
         habilidades:  habilidades.count,
         totalPokemon,
     };
 
-    return homeStatsCache;
+    return appState.cache.homeStats;
 }
 
 // Animación de conteo numérico
@@ -209,12 +205,6 @@ async function renderDestacados(container) {
         </div>
     </div>`;
 
-    container.querySelectorAll(".dest2-filter-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            container.querySelectorAll(".dest2-filter-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-        });
-    });
 }
 
 export async function renderHome() {
@@ -223,7 +213,7 @@ export async function renderHome() {
     <header class="header_banner">
         <div class="header_input">
             <i class="fa-brands fa-sistrix"></i>
-            <input type="text" id="homeSearchInput" placeholder="Buscar Pokémon, movimientos, objetos...">
+            <input type="text" id="homeSearchInput" placeholder="Buscar Pokémon...">
         </div>
     </header>
     <div class="home_section">

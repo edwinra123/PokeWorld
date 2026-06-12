@@ -1,46 +1,7 @@
-import { showPokemonDetails, capitalize, translateType } from "../assets/utils.js";
+import { capitalize, getLegendarySpeciesInfo, translateType } from "../assets/utils.js";
 import { appState } from "../assets/state.js";
 
 const POKE_URL     = "https://pokeapi.co/api/v2/pokemon";
-const SPECIES_URL  = "https://pokeapi.co/api/v2/pokemon-species";
-
-// ─── Mapa de generación → región ─────────────────────────────────────────────
-const GEN_REGION = {
-    1: "Kanto", 2: "Johto", 3: "Hoenn", 4: "Sinnoh",
-    5: "Unova", 6: "Kalos", 7: "Alola", 8: "Galar", 9: "Paldea",
-};
-
-// ─── Caché en memoria ─────────────────────────────────────────────────────────
-// Se carga UNA sola vez desde la API y se reutiliza en appState.cache.legendariosInfo
-async function getLegendariosInfo() {
-    if (appState.cache.legendariosInfo) return appState.cache.legendariosInfo;
-
-    const res  = await fetch(`${SPECIES_URL}?limit=1302`);
-    const data = await res.json();
-
-    const checks = await Promise.all(
-        data.results.map(s =>
-            fetch(s.url)
-                .then(r => r.json())
-                .then(sp => ({ sp, url: s.url }))
-                .catch(() => null)
-        )
-    );
-
-    appState.cache.legendariosInfo = checks
-        .filter(item => item && (item.sp.is_legendary || item.sp.is_mythical))
-        .map(({ sp }) => {
-            const genNum = parseInt(sp.generation.url.split("/").filter(Boolean).pop(), 10);
-            return {
-                nombre: sp.name,
-                id:     sp.id,
-                region: GEN_REGION[genNum] || `Gen ${genNum}`,
-            };
-        })
-        .sort((a, b) => a.id - b.id);
-
-    return appState.cache.legendariosInfo;
-}
 
 const coloresClaro = {
     psychic: "#fce4ec", dragon: "#ede7f6", water: "#e3f2fd", fire: "#fff3e0",
@@ -114,7 +75,7 @@ async function cargarDestacados() {
     contenedores.forEach(c => skeletonDestacado(c));
 
     // Elegimos 3 aleatorios de la lista dinámica
-    const lista       = await getLegendariosInfo();
+    const lista       = await getLegendarySpeciesInfo();
     const seleccionados = [...lista]
         .sort(() => Math.random() - 0.5)
         .slice(0, 3)
@@ -189,7 +150,7 @@ async function cargarListaLegendarios() {
     `).join("");
 
     // Obtenemos la lista dinámica (ya cacheada si cargarDestacados se llamó antes)
-    const lista    = await getLegendariosInfo();
+    const lista    = await getLegendarySpeciesInfo();
     const pokemons = await Promise.all(lista.map((l) => fetchPokemon(l.nombre)));
 
     tbody.innerHTML = "";
@@ -199,6 +160,11 @@ async function cargarListaLegendarios() {
         const tr = document.createElement("tr");
         tr.className = "tr_table";
         tr.style.cursor = "pointer";
+        tr.dataset.search = [
+            pokemon.nombre,
+            pokemon.tipos.map(t => translateType(t)).join(" "),
+            region,
+        ].join(" ").toLowerCase();
         tr.innerHTML = `
             <td class="tr1">${String(i + 1).padStart(2, "0")}.</td>
             <td>
@@ -221,6 +187,8 @@ async function cargarListaLegendarios() {
 
         tbody.appendChild(tr);
     });
+
+    filtrarLegendarios(document.getElementById("searchInput")?.value || "");
 }
 
 
@@ -253,9 +221,9 @@ const statLabels = {
 function showLegendarioDetails(pokemon) {
     const tipo = pokemon.tipos[0];
     const [c1, c2] = coloresGradiente[tipo] || ["#7c3aed", "#a855f7"];
-    const totalStats = pokemon.stats
-        ? Object.values(pokemon.stats).reduce((a, b) => a + b, 0)
-        : pokemon.stats_raw?.reduce((sum, s) => sum + s.base_stat, 0) || 0;
+    const totalStats = pokemon.stats_raw
+        ? pokemon.stats_raw.reduce((sum, s) => sum + s.base_stat, 0)
+        : Object.values(pokemon.stats || {}).reduce((a, b) => a + b, 0);
 
     // Obtener stats completas si están disponibles
     const statsHtml = pokemon.stats_raw ? pokemon.stats_raw.map(s => {
@@ -349,8 +317,6 @@ function showLegendarioDetails(pokemon) {
     document.body.appendChild(overlay);
     setTimeout(() => overlay.classList.add("active"), 10);
 
-    // Favorito
-    const { getFavorites, saveFavorites, showNotification } = window._lgUtils || {};
     const favBtn = overlay.querySelector("#lg-fav-btn");
     import("../assets/utils.js").then(({ getFavorites, toggleFavorite }) => {
         const favs = getFavorites();
@@ -378,6 +344,29 @@ function showLegendarioDetails(pokemon) {
             document.removeEventListener("keydown", esc);
         }
     });
+}
+
+function filtrarLegendarios(query) {
+    const tbody = document.getElementById("lista-legendarios-tbody");
+    if (!tbody) return;
+
+    const normalizedQuery = query.toLowerCase().trim();
+    const rows = [...tbody.querySelectorAll("tr.tr_table")];
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const isVisible = !normalizedQuery || row.dataset.search.includes(normalizedQuery);
+        row.style.display = isVisible ? "" : "none";
+        if (isVisible) visibleCount++;
+    });
+
+    tbody.querySelector(".empty-legendarios-row")?.remove();
+    if (rows.length > 0 && visibleCount === 0) {
+        const tr = document.createElement("tr");
+        tr.className = "empty-legendarios-row";
+        tr.innerHTML = `<td colspan="5" style="padding:1.5rem;text-align:center;color:#6b7280;">No se encontraron legendarios.</td>`;
+        tbody.appendChild(tr);
+    }
 }
 
 export function renderLegendarios() {
@@ -421,6 +410,10 @@ export function renderLegendarios() {
             </div>
         </div>
     `;
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+        filtrarLegendarios(e.target.value);
+    });
 
     cargarDestacados();
     cargarListaLegendarios();

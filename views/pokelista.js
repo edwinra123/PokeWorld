@@ -3,6 +3,7 @@ import { showPokemonDetails, capitalize, padId } from "../assets/utils.js";
 
 const POKE_URL = "https://pokeapi.co/api/v2/pokemon";
 const perPage  = 20;
+let totalPages = 1;
 
 const TYPES = [
     { name: "fire",     label: "Fuego",    color: "#F08030" },
@@ -26,15 +27,15 @@ const TYPES = [
 ];
 
 const GENERATIONS = [
-    { value: "1", label: "Gen 1", offset: 0,   limit: 151 },
-    { value: "2", label: "Gen 2", offset: 151,  limit: 100 },
-    { value: "3", label: "Gen 3", offset: 251,  limit: 135 },
-    { value: "4", label: "Gen 4", offset: 386,  limit: 107 },
-    { value: "5", label: "Gen 5", offset: 493,  limit: 156 },
-    { value: "6", label: "Gen 6", offset: 649,  limit: 72  },
-    { value: "7", label: "Gen 7", offset: 721,  limit: 88  },
-    { value: "8", label: "Gen 8", offset: 809,  limit: 96  },
-    { value: "9", label: "Gen 9", offset: 905,  limit: 120 },
+    { value: "1", label: "Gen 1" },
+    { value: "2", label: "Gen 2" },
+    { value: "3", label: "Gen 3" },
+    { value: "4", label: "Gen 4" },
+    { value: "5", label: "Gen 5" },
+    { value: "6", label: "Gen 6" },
+    { value: "7", label: "Gen 7" },
+    { value: "8", label: "Gen 8" },
+    { value: "9", label: "Gen 9" },
 ];
 
 // ─── Caché en memoria ─────────────────────────────────────────────────────────
@@ -45,6 +46,26 @@ async function getAllPokemonList() {
     const data = await res.json();
     appState.cache.pokemonList = data.results;
     return appState.cache.pokemonList;
+}
+
+async function getGenerationPokemon(gen) {
+    if (appState.cache.generationPokemon[gen]) return appState.cache.generationPokemon[gen];
+
+    const res = await fetch(`https://pokeapi.co/api/v2/generation/${gen}`);
+    const data = await res.json();
+
+    appState.cache.generationPokemon[gen] = data.pokemon_species
+        .sort((a, b) => getIdFromUrl(a.url) - getIdFromUrl(b.url))
+        .map((species) => ({
+            name: species.name,
+            url: `${POKE_URL}/${species.name}`,
+        }));
+
+    return appState.cache.generationPokemon[gen];
+}
+
+function getIdFromUrl(url) {
+    return Number(url.split("/").filter(Boolean).pop());
 }
 
 export function renderPokeLista() {
@@ -157,18 +178,11 @@ export function renderPokeLista() {
         if (appState.pokelista.currentPage > 1) { appState.pokelista.currentPage--; loadWithFilters(); }
     });
     document.querySelector(".next").addEventListener("click", () => {
-        appState.pokelista.currentPage++;
-        loadWithFilters();
+        if (appState.pokelista.currentPage < totalPages) {
+            appState.pokelista.currentPage++;
+            loadWithFilters();
+        }
     });
-
-    // --- Búsqueda ---
-    if (appState.searchQuery) {
-        searchInput.value = appState.searchQuery;
-        appState.searchQuery = "";
-        searchInput.dispatchEvent(new Event("input"));
-    } else {
-        loadWithFilters();
-    }
 
     searchInput.addEventListener("keydown", async (e) => {
         if (e.key !== "Enter") return;
@@ -182,6 +196,7 @@ export function renderPokeLista() {
             container.innerHTML = "";
             container.appendChild(createCard(pokeData));
             applyCompactMode(container);
+            setupPagination(1);
         } catch (err) {
             container.innerHTML = `<p style="color:red;">${err.message}</p>`;
         }
@@ -210,11 +225,21 @@ export function renderPokeLista() {
                 const pokemons = await Promise.all(results.map(p => fetch(p.url).then(r => r.json())));
                 pokemons.forEach(p => container.appendChild(createCard(p)));
                 applyCompactMode(container);
+                setupPagination(results.length);
             } catch (err) {
                 container.innerHTML = `<p style="color:red;">Error al buscar</p>`;
             }
         }, 300);
     });
+
+    // --- Búsqueda enviada desde Home ---
+    if (appState.searchQuery) {
+        searchInput.value = appState.searchQuery;
+        appState.searchQuery = "";
+        searchInput.dispatchEvent(new Event("input"));
+    } else {
+        loadWithFilters();
+    }
 }
 
 async function loadWithFilters() {
@@ -239,14 +264,12 @@ async function loadWithFilters() {
             applyCompactMode(container);
 
         } else if (activeGen) {
-            const gen  = GENERATIONS.find(g => g.value === activeGen);
-            const res  = await fetch(`${POKE_URL}?limit=${gen.limit}&offset=${gen.offset}`);
-            const data = await res.json();
-            const slice = data.results.slice((currentPage - 1) * perPage, currentPage * perPage);
+            const all = await getGenerationPokemon(activeGen);
+            const slice = all.slice((currentPage - 1) * perPage, currentPage * perPage);
             const pokemons = await Promise.all(slice.map(p => fetch(p.url).then(r => r.json())));
             container.innerHTML = "";
             pokemons.forEach(p => container.appendChild(createCard(p)));
-            setupPagination(gen.limit);
+            setupPagination(all.length);
             applyCompactMode(container);
 
         } else {
@@ -291,7 +314,7 @@ function showSkeletons(container, count = 20) {
 }
 
 function applyCompactMode(container) {
-    if (localStorage.getItem("compactMode") === "true") {
+    if (appState.prefs.compactMode) {
         container.classList.add("compacto");
     }
 }
@@ -315,5 +338,11 @@ function createCard(poke) {
 
 function setupPagination(total) {
     const numbers = document.querySelector(".numbers");
-    if (numbers) numbers.innerHTML = `Página ${appState.pokelista.currentPage} / ${Math.ceil(total / perPage)}`;
+    totalPages = Math.max(1, Math.ceil(total / perPage));
+    if (numbers) numbers.innerHTML = `Página ${appState.pokelista.currentPage} / ${totalPages}`;
+
+    const prev = document.querySelector(".prev");
+    const next = document.querySelector(".next");
+    if (prev) prev.disabled = appState.pokelista.currentPage <= 1;
+    if (next) next.disabled = appState.pokelista.currentPage >= totalPages;
 }

@@ -32,6 +32,7 @@ export const appState = {
         homeStats:      null,   
         pokemonList:    null,   
         legendariosInfo: null,  
+        generationPokemon: {},
         pokemon:        {},     
     },
 

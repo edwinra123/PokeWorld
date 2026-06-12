@@ -1,3 +1,5 @@
+import { appState } from "../assets/state.js";
+
 export function renderAjustes() {
     const app = document.getElementById("main-content");
     app.classList.add("pagina-banner");
@@ -25,7 +27,7 @@ export function renderAjustes() {
                                 <h2>Visualización</h2>
                                 <p>Personaliza cómo ves la Pokédex</p>
                             </div>
-                            <div class="banner-config-bottom">
+                            <div class="banner-config-bottom ajuste-item">
                                 <div class="left-config">
                                     <div class="icon-left"><i class="fa-solid fa-moon"></i></div>
                                     <div class="config-text">
@@ -40,7 +42,7 @@ export function renderAjustes() {
                                     </label>
                                 </div>
                             </div>
-                            <div class="banner-config-bottom">
+                            <div class="banner-config-bottom ajuste-item">
                                 <div class="left-config">
                                     <div class="icon2"><i class="fa-solid fa-border-all"></i></div>
                                     <div class="config-text">
@@ -72,19 +74,17 @@ export function renderAjustes() {
 
     initDarkModeToggle();
     initCompactToggle();
+    initSettingsSearch();
 }
 
 function initDarkModeToggle() {
     const toggle = document.getElementById("darkToggle");
     if (!toggle) return;
 
-    toggle.checked = localStorage.getItem("darkMode") === "true";
+    toggle.checked = appState.prefs.darkMode;
 
     toggle.addEventListener("change", () => {
-        const isDark = toggle.checked;
-        document.documentElement.classList.toggle("dark", isDark);
-        document.body.classList.toggle("dark", isDark);
-        localStorage.setItem("darkMode", isDark ? "true" : "false");
+        appState.prefs.darkMode = toggle.checked;
     });
 }
 
@@ -92,12 +92,25 @@ function initCompactToggle() {
     const toggle = document.getElementById("toggle-compact");
     if (!toggle) return;
 
-    toggle.checked = localStorage.getItem("compactMode") === "true";
+    toggle.checked = appState.prefs.compactMode;
 
     toggle.addEventListener("change", () => {
-        localStorage.setItem("compactMode", toggle.checked ? "true" : "false");
+        appState.prefs.compactMode = toggle.checked;
 
         const cards = document.querySelector(".container_cards");
         if (cards) cards.classList.toggle("compacto", toggle.checked);
+    });
+}
+
+function initSettingsSearch() {
+    const input = document.querySelector(".input_search_aj");
+    const items = [...document.querySelectorAll(".ajuste-item")];
+    if (!input || items.length === 0) return;
+
+    input.addEventListener("input", () => {
+        const query = input.value.toLowerCase().trim();
+        items.forEach((item) => {
+            item.style.display = item.textContent.toLowerCase().includes(query) ? "" : "none";
+        });
     });
 }
